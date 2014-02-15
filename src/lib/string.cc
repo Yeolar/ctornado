@@ -151,7 +151,7 @@ int vscnprintf(char *buf, size_t size, const char *fmt, va_list args)
     if (n <= 0) {
         return 0;
     }
-    if (n < size) {
+    if (n < (int)size) {
         return n;
     }
     return size - 1;
@@ -197,8 +197,8 @@ char *vslprintf(char *buf, char *end, const char *fmt, va_list args)
     double f;
     size_t len, slen;
     int64_t i64;
-    uint64_t ui64, frac;
-    int width, sign, hex, frac_width, scale, k;
+    uint64_t ui64, frac, scale;
+    int width, sign, hex, frac_width, k;
     Str *s;
 
     while (*fmt && buf < end) {
@@ -456,8 +456,8 @@ size_t vslprintf_len(const char *fmt, va_list args)
     double f;
     size_t slen, n;
     int64_t i64;
-    uint64_t ui64, frac;
-    int width, sign, hex, frac_width, scale, k;
+    uint64_t ui64, frac, scale;
+    int width, sign, hex, frac_width, k;
     Str *s;
 
     n = 0;
@@ -715,7 +715,7 @@ int Str::toi() const
 
 bool Str::all(int isfunc(int)) const
 {
-    for (int i = 0; i < len_; i++) {
+    for (size_t i = 0; i < len_; i++) {
         if (isfunc(*(data_ + i)) == 0)
             return false;
     }

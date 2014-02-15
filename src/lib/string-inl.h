@@ -199,7 +199,7 @@ inline Str& Str::operator=(Str&& str)
 
 inline char Str::operator[](int i) const
 {
-    if (i < -len_ || i >= len_)
+    if (i < -(int)len_ || i >= (int)len_)
         throw std::out_of_range("Invalid position");
 
     return *(data_ + i % len_);

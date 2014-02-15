@@ -17,12 +17,20 @@
 #ifndef __CORE_H
 #define __CORE_H
 
+//
+// Request use of C99 limit macros.
+//
+// The ISO C99 standard specifies that in C++ implementations those macros
+// should only be defined if explicitly requested.
+//
+#define __STDC_LIMIT_MACROS
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <ctype.h>
 #include <time.h>
 #include <errno.h>
@@ -66,11 +74,6 @@ namespace ctornado {
 // # define UINT32_MAX	(4294967295U)
 // # define UINT64_MAX	(__UINT64_C(18446744073709551615))
 //
-#define UINT8_MAX           (255)
-#define UINT16_MAX          (65535)
-#define UINT32_MAX          (4294967295U)
-#define UINT64_MAX          (__UINT64_C(18446744073709551615))
-
 #define UINT8_MAXLEN        (3 + 1)
 #define UINT16_MAXLEN       (5 + 1)
 #define UINT32_MAXLEN       (10 + 1)

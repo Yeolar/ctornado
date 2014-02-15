@@ -40,7 +40,7 @@ VError::VError(const char *msg, ...)
     va_end(args);
 }
 
-VError::~VError()
+VError::~VError() noexcept
 {
     if (msg_)
         free_w(msg_);

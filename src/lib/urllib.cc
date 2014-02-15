@@ -132,7 +132,7 @@ bool URL::is_scheme_chars(const Str& str)
             "0123456789"
             "+-.");
 
-    for (int i = 0; i < str.len_; i++) {
+    for (size_t i = 0; i < str.len_; i++) {
         if (scheme_chars.find(str[i]) == -1)
             return false;
     }
@@ -146,7 +146,7 @@ bool URL::is_uses_relative(const Str& str)
         "file", "mms", "https", "shttp", "prospero",
         "rtsp", "rtspu", "svn", "svn+ssh", "sftp"};
 
-    for (int i = 0; i < NELEMS(uses_relative); i++) {
+    for (size_t i = 0; i < NELEMS(uses_relative); i++) {
         if (str.eq(uses_relative[i]))
             return true;
     }
@@ -161,7 +161,7 @@ bool URL::is_uses_netloc(const Str& str)
         "rtsp", "rtspu", "rsync", "svn", "svn+ssh", "sftp", "nfs",
         "git", "git+ssh"};
 
-    for (int i = 0; i < NELEMS(uses_netloc); i++) {
+    for (size_t i = 0; i < NELEMS(uses_netloc); i++) {
         if (str.eq(uses_netloc[i]))
             return true;
     }

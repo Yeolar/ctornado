@@ -129,7 +129,8 @@ static int _parse_param(const Str& str)
 //
 static Str _parse_header(const Str& line, ss_map_t *pdict)
 {
-    int pos, i;
+    size_t pos;
+    int i;
     Str key, parts, p, name, value;
 
     pos = _parse_param(line);

@@ -156,7 +156,8 @@ void HTTPConnection::finish_request()
 
 void HTTPConnection::on_headers(const Str& data)
 {
-    int eol, content_length;
+    size_t content_length;
+    int eol;
     int family;
     Str start_line, method, uri, version, remote_ip, content_length_str;
     HTTPHeaders *headers;

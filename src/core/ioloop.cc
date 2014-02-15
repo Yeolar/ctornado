@@ -154,8 +154,6 @@ void IOLoop::start()
             event_list = poll_.poll(poll_timeout);
         }
         catch (IOError& e) {
-            delete event_list;
-
             if (e.no() == EINTR)
                 continue;
             else

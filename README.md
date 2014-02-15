@@ -1,4 +1,4 @@
-ctornado
+CTornado
 ========
 
 A C++ fork of Facebook Tornado web framework.

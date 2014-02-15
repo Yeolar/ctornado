@@ -28,7 +28,7 @@ bool is_valid_response_code(int code)
         410, 411, 412, 413, 414, 415, 416, 417, 422, 423, 424, 426,
         500, 501, 502, 503, 504, 505, 507, 510
     };
-    for (int i = 0; i < NELEMS(valid_code); i++) {
+    for (size_t i = 0; i < NELEMS(valid_code); i++) {
         if (code == valid_code[i])
             return true;
     }

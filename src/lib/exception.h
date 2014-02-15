@@ -53,7 +53,7 @@ public:
     VError(int err) : Error(err) {}
     VError(int err, const char *msg, ...);
     VError(const char *msg, ...);
-    virtual ~VError();
+    virtual ~VError() noexcept;
 
 protected:
     virtual void format_message(const char *fmt, va_list varg);
