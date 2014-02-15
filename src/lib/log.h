@@ -49,7 +49,7 @@ public:
 
     static const int EMERG  = 0;        // system in unusable
     static const int CRIT   = 1;        // critical conditions
-    static const int ERR    = 2;        // error conditions
+    static const int ERROR  = 2;        // error conditions
     static const int WARN   = 3;        // warning conditions
     static const int INFO   = 4;        // informational
     static const int DEBUG  = 5;        // debug messages
@@ -71,7 +71,7 @@ private:
 // loga_hexdump - log hexdump always
 // log_critical - critical log messages
 // log_error    - error log messages
-// log_warning  - warning log messages
+// log_warn     - warning log messages
 // log_info     - informational messages
 // log_panic    - log messages followed by a panic
 // ...
@@ -111,9 +111,9 @@ private:
 
 #else
 
-#define log_debug(_level, ...)
-#define log_verb(_level, ...)
-#define log_vverb(_level, ...)
+#define log_debug(...)
+#define log_verb(...)
+#define log_vverb(...)
 #define log_hexdump(_level, _data, _datalen, ...)
 
 #endif
@@ -140,7 +140,7 @@ private:
 } while (0)
 
 #define log_error(...) do {                                             \
-    if (Logger::loggable(Logger::ERR)) {                                \
+    if (Logger::loggable(Logger::ERROR)) {                              \
         Logger::_log('E', __FILE__, __LINE__, 0, __VA_ARGS__);          \
     }                                                                   \
 } while (0)

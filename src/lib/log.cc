@@ -22,7 +22,7 @@ static Logger logger;
 
 const int Logger::EMERG;
 const int Logger::CRIT;
-const int Logger::ERR;
+const int Logger::ERROR;
 const int Logger::WARN;
 const int Logger::INFO;
 const int Logger::DEBUG;
@@ -30,6 +30,9 @@ const int Logger::VERB;
 const int Logger::VVERB;
 
 const size_t Logger::LOG_MAX_LEN;
+
+static const char *LOG_NAME[] =
+    { "EMERG", "CRIT", "ERROR", "WARN", "INFO", "DEBUG", "VERB", "VVERB" };
 
 Logger::Logger()
 {
@@ -73,7 +76,7 @@ void Logger::set_level(int level)
     Logger *l = &logger;
 
     l->level_ = std::max(EMERG, std::min(level, VVERB));
-    loga("set log level to %d", l->level_);
+    loga("set log level to %s", LOG_NAME[l->level_]);
 }
 
 bool Logger::loggable(int level)
