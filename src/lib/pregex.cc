@@ -127,14 +127,14 @@ RegexMatch::~RegexMatch()
 
 range_t RegexMatch::get(int i)
 {
-    ASSERT(i >= 0 && i < (int)size_);
+    ASSERT(i >= 0 && i < static_cast<int>(size_));
 
     return { captures_[i*2], captures_[i*2+1] };
 }
 
 Str RegexMatch::substr(int i)
 {
-    ASSERT(i >= 0 && i < (int)size_);
+    ASSERT(i >= 0 && i < static_cast<int>(size_));
 
     return str_.substr(captures_[i*2], captures_[i*2+1]);
 }

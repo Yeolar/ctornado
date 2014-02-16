@@ -151,7 +151,7 @@ int vscnprintf(char *buf, size_t size, const char *fmt, va_list args)
     if (n <= 0) {
         return 0;
     }
-    if (n < (int)size) {
+    if (n < static_cast<int>(size)) {
         return n;
     }
     return size - 1;

@@ -22,7 +22,8 @@
 namespace ctornado {
 
 #define STR_VALID_POS(_p, _n)   \
-    (_p) != -1 ? (_p) : (_n); ASSERT((_p) >= -1 && (_p) <= (int) (_n))
+    (_p) != -1 ? (_p) : (_n);   \
+    ASSERT((_p) >= -1 && (_p) <= static_cast<int>(_n))
 
 //
 // empty string
@@ -199,7 +200,7 @@ inline Str& Str::operator=(Str&& str)
 
 inline char Str::operator[](int i) const
 {
-    if (i < -(int)len_ || i >= (int)len_)
+    if (i < -static_cast<int>(len_) || i >= static_cast<int>(len_))
         throw std::out_of_range("Invalid position");
 
     return *(data_ + i % len_);
