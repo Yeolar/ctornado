@@ -54,7 +54,7 @@
 
 #include <exception>
 #include <stdexcept>
-#include <memory>
+#include <new>
 #include <algorithm>
 #include <functional>
 #include <string>

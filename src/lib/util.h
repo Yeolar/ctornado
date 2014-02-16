@@ -19,6 +19,9 @@
 
 #include "ctornado.h"
 
+inline void *operator new(size_t n);
+inline void operator delete(void *ptr) noexcept;
+
 namespace ctornado {
 
 #define NELEMS(a)           ((sizeof(a)) / sizeof((a)[0]))
@@ -67,9 +70,9 @@ void _stacktrace(int skip_count);
     (_p) = nullptr;                             \
 } while (0)
 
-void *_alloc(size_t size, const char *name, int line);
-void *_zalloc(size_t size, const char *name, int line);
-void _free(void *ptr, const char *name, int line);
+inline void *_alloc(size_t size, const char *name, int line);
+inline void *_zalloc(size_t size, const char *name, int line);
+inline void _free(void *ptr, const char *name, int line);
 
 typedef struct {
     int begin;

@@ -30,16 +30,16 @@ clean_test:
 	rm -f *_test*
 
 $(XLIBS): %.o: lib/%.cc $(ALLOC_DEP)
-	$(CXX) -c -o $@ $(CPPFLAGS) $(ALLOC_FLAGS) $<
+	$(CXX) -c $(CPPFLAGS) $(ALLOC_FLAGS) -o $@ $<
 
 $(CORES): %.o: core/%.cc $(ALLOC_DEP)
-	$(CXX) -c -o $@ $(CPPFLAGS) $(ALLOC_FLAGS) $<
+	$(CXX) -c $(CPPFLAGS) $(ALLOC_FLAGS) -o $@ $<
 
 $(WEBS): %.o: web/%.cc $(ALLOC_DEP)
-	$(CXX) -c -o $@ $(CPPFLAGS) $(ALLOC_FLAGS) $<
+	$(CXX) -c $(CPPFLAGS) $(ALLOC_FLAGS) -o $@ $<
 
 $(TESTS): %: test/%.cc $(OBJS)
-	$(CXX) -o $@ $(CPPFLAGS) $(ALLOC_FLAGS) $(OBJS) $(LDFLAGS) $(ALLOC_LD) $<
+	$(CXX) $(CPPFLAGS) $(ALLOC_FLAGS) -o $@ $(OBJS) $(LDFLAGS) $(ALLOC_LD) $<
 
 ../deps/jemalloc/lib/libjemalloc.a:
 	cd ../deps/jemalloc && ./configure --with-jemalloc-prefix=je_ --enable-cc-silence && $(MAKE) lib/libjemalloc.a

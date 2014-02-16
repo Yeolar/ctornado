@@ -48,49 +48,6 @@ void _assert(const char *cond, const char *name, int line, int panic)
     }
 }
 
-void *_alloc(size_t size, const char *name, int line)
-{
-    void *p;
-
-    ASSERT(size != 0);
-
-#ifdef USE_JEMALLOC
-    p = je_malloc(size);
-#else
-    p = malloc(size);
-#endif
-    if (p == nullptr) {
-        log(Logger::ERROR, name, line, "malloc(%zu) failed", size);
-    }
-    else {
-        log(Logger::VVERB, name, line, "malloc(%zu) at %p", size, p);
-    }
-    return p;
-}
-
-void *_zalloc(size_t size, const char *name, int line)
-{
-    void *p;
-
-    p = _alloc(size, name, line);
-    if (p != nullptr) {
-        memset(p, 0, size);
-    }
-    return p;
-}
-
-void _free(void *ptr, const char *name, int line)
-{
-    ASSERT(ptr != nullptr);
-
-    log(Logger::VVERB, name, line, "free(%p)", ptr);
-#ifdef USE_JEMALLOC
-    je_free(ptr);
-#else
-    free(ptr);
-#endif
-}
-
 int isnscntrl(int c)
 {
     return iscntrl(c) && !isspace(c);
