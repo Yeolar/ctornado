@@ -97,12 +97,13 @@ void HTTPError::format_message(const char *fmt, va_list varg)
 
     msg_ = reinterpret_cast<char *>(alloc_w(ERROR_MSG_LEN));
 
-    n = scnprintf(msg_, ERROR_MSG_LEN, "HTTP %d: %s (",
+    n = scnprintf(msg_, ERROR_MSG_LEN, "HTTP %d: %s",
             err_, get_response_w3c_name(err_));
 
     if (fmt != nullptr) {
+        n += scnprintf(msg_ + n, ERROR_MSG_LEN - n, " (");
         n += vscnprintf(msg_ + n, ERROR_MSG_LEN - n, fmt, varg);
-        n += scnprintf(msg_ + n, ERROR_MSG_LEN - n, "(");
+        n += scnprintf(msg_ + n, ERROR_MSG_LEN - n, ")");
     }
 }
 
