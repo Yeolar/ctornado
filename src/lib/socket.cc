@@ -77,10 +77,10 @@ static int _resolve_inet(sockinfo_t *si, int family, const char *name, int port)
     hints.ai_family = family;           // AF_INET or AF_INET6
     hints.ai_socktype = SOCK_STREAM;
 
-    if (name == nullptr) {
+    if (name == nullptr || *name == '\0') {
         //
-        // If AI_PASSIVE flag is specified, and name is nullptr, the returned
-        // socket address will contain the wildcard IP address.
+        // If AI_PASSIVE flag is specified, and name is nullptr or "",
+        // the returned socket address will contain the wildcard IP address.
         //
         hints.ai_flags |= AI_PASSIVE;
     }
