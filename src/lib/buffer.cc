@@ -42,7 +42,7 @@ void Buffer::merge_prefix(size_t size)
             return;
         }
 
-        size = std::max(size, size_);
+        size = max(size, size_);
 
         prefix_buf = Str::alloc(size);
         pos = prefix_buf->data;
@@ -78,7 +78,7 @@ void Buffer::double_prefix()
     if (chunk_dq_.size() < 2)
         return;
 
-    n = std::max(chunk_dq_[0].len_ * 2, chunk_dq_[0].len_ + chunk_dq_[1].len_);
+    n = max(chunk_dq_[0].len_ * 2, chunk_dq_[0].len_ + chunk_dq_[1].len_);
     merge_prefix(n);
 }
 

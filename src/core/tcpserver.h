@@ -116,7 +116,7 @@ private:
     void handle_connection(Socket *sock);
     void accept_handler(Socket *sock, int fd, uint32_t events);
 
-    std::map<int, Socket *> sockets_;
+    map<int, Socket *> sockets_;
     socket_list_t pending_sockets_;
     bool started_;
 };

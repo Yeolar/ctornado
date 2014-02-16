@@ -201,14 +201,14 @@ inline Str& Str::operator=(Str&& str)
 inline char Str::operator[](int i) const
 {
     if (i < -static_cast<int>(len_) || i >= static_cast<int>(len_))
-        throw std::out_of_range("Invalid position");
+        throw out_of_range("Invalid position");
 
     return *(data_ + i % len_);
 }
 
-inline std::string Str::tos() const
+inline string Str::tos() const
 {
-    return std::string(data_, len_);
+    return string(data_, len_);
 }
 
 inline const char *Str::begin() const

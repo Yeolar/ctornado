@@ -58,7 +58,7 @@ public:
     Str output();
 
 private:
-    std::map<Str, CookieMorsel *, StrLess> map_;
+    map<Str, CookieMorsel *, StrLess> map_;
 
     void __set(const Str& key, const Str& value, const Str& coded_value);
 };

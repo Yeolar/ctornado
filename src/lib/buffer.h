@@ -38,7 +38,7 @@ public:
     void clear();
 
 private:
-    std::deque<Str> chunk_dq_;
+    deque<Str> chunk_dq_;
     size_t size_;
 };
 

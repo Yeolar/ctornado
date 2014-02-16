@@ -84,11 +84,11 @@ void TCPServer::start()
 
 void TCPServer::stop()
 {
-    for (auto& sock_pair : sockets_) {
-        ioloop_->remove_handler(sock_pair.first);
-        sock_pair.second->close();
-        delete sock_pair.second;
-        sock_pair.second = nullptr;
+    for (auto& kv : sockets_) {
+        ioloop_->remove_handler(kv.first);
+        kv.second->close();
+        delete kv.second;
+        kv.second = nullptr;
     }
 }
 

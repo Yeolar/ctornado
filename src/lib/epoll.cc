@@ -74,7 +74,7 @@ event_list_t *EPoll::poll(int64_t timeout)
             log_vverb("epoll_wait on fd(%d) poll out event(%d, %#x)",
                     fd_, fd, events);
 
-            event_list->push_back(std::make_pair(fd, events));
+            event_list->push_back(make_pair(fd, events));
         }
     }
     if (n == 0) {

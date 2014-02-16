@@ -41,9 +41,9 @@ HTTPHeaders *HTTPHeaders::parse(const Str& str)
             it++;
         }
 
-        auto pair = line.split_pair(':');
-        if (!pair.first.null() && !pair.second.null()) {
-            headers->add(pair.first, pair.second.strip());
+        auto kv = line.split_pair(':');
+        if (!kv.first.null() && !kv.second.null()) {
+            headers->add(kv.first, kv.second.strip());
         }
     }
     return headers;
@@ -75,7 +75,7 @@ Str HTTPHeaders::get(const Str& name, const Str& deft)
     try {
         return map_.at(normalize_name(name));
     }
-    catch (std::out_of_range) {
+    catch (out_of_range) {
         return deft;
     }
 }
@@ -92,7 +92,7 @@ Str HTTPHeaders::normalize_name(const Str& name)
     try {
         return normalized_headers_.at(name);
     }
-    catch (std::out_of_range) {
+    catch (out_of_range) {
         RegexMatch m = normalized_header_re_->exec(name, 1);
 
         if (!m.empty())

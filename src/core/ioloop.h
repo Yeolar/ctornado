@@ -169,11 +169,11 @@ private:
     static IOLoop *instance_;
 
     EPoll poll_;
-    std::map<int, cb_handler_t> handlers_;
-    std::map<int, uint32_t> events_;
-    std::list<cb_t> callbacks_;
+    map<int, cb_handler_t> handlers_;
+    map<int, uint32_t> events_;
+    list<cb_t> callbacks_;
     pthread_mutex_t callback_lock_;
-    std::priority_queue<Timeout, std::vector<Timeout>, TimeoutLess> timeouts_;
+    priority_queue<Timeout, vector<Timeout>, TimeoutLess> timeouts_;
     bool running_;
     bool stopped_;
 

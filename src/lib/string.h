@@ -93,7 +93,7 @@ public:
 
     char operator[](int i) const;
 
-    std::string tos() const;
+    string tos() const;
     int toi() const;
 
     const char *begin() const;
@@ -168,7 +168,7 @@ struct StrLess
         if (s1.data_ == nullptr || s2.data_ == nullptr)
             return false;
 
-        return memcmp(s1.data_, s2.data_, std::min(s1.len_, s2.len_)) < 0;
+        return memcmp(s1.data_, s2.data_, min(s1.len_, s2.len_)) < 0;
     }
 };
 

@@ -251,7 +251,7 @@ void IOStream::handle_events(int fd, uint32_t events)
             // handle_write, so don't close the IOStream until those
             // callbacks have had a chance to run.
             //
-            ioloop_->add_callback(std::bind(&IOStream::close, this));
+            ioloop_->add_callback(bind(&IOStream::close, this));
             return;
         }
 
@@ -310,8 +310,7 @@ void IOStream::run_callback(cb_t callback)
     //   of the application's StackContexts
     //
     pending_callbacks_ += 1;
-    ioloop_->add_callback(
-            std::bind(&IOStream::callback_wrapper, this, callback));
+    ioloop_->add_callback(bind(&IOStream::callback_wrapper, this, callback));
 }
 
 void IOStream::run_callback(cb_stream_t callback, const Str& data)
@@ -320,9 +319,8 @@ void IOStream::run_callback(cb_stream_t callback, const Str& data)
     // The same as above.
     //
     pending_callbacks_ += 1;
-    cb_t cb = std::bind(callback, data);
-    ioloop_->add_callback(
-            std::bind(&IOStream::callback_wrapper, this, cb));
+    cb_t cb = bind(callback, data);
+    ioloop_->add_callback(bind(&IOStream::callback_wrapper, this, cb));
 }
 
 void IOStream::handle_read()
@@ -462,7 +460,7 @@ bool IOStream::read_from_buffer()
         bytes_to_consume = read_buffer_.size();
 
         if (read_bytes_ != 0) {
-            bytes_to_consume = std::min(read_bytes_, bytes_to_consume);
+            bytes_to_consume = min(read_bytes_, bytes_to_consume);
             read_bytes_ -= bytes_to_consume;
         }
         run_callback(streaming_callback_, consume(bytes_to_consume));
@@ -647,7 +645,7 @@ void IOStream::add_io_state(uint32_t state)
     if (state_ == 0) {
         state_ = IOLoop::ERROR | state;
         ioloop_->add_handler(socket_->fd_,
-                std::bind(&IOStream::handle_events, this, _1, _2), state_);
+                bind(&IOStream::handle_events, this, _1, _2), state_);
     }
     else if ((state_ & state) == 0) {
         state_ |= state;

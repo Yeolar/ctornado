@@ -255,7 +255,7 @@ char *vslprintf(char *buf, char *end, const char *fmt, va_list args)
             switch (*fmt) {
             case 'S':
                 s = va_arg(args, Str *);
-                len = std::min(static_cast<size_t>(end - buf), s->len_);
+                len = min(static_cast<size_t>(end - buf), s->len_);
                 memcpy(buf, s->data_, len);
                 buf += len;
                 fmt++;
@@ -268,7 +268,7 @@ char *vslprintf(char *buf, char *end, const char *fmt, va_list args)
                     }
                 }
                 else {
-                    len = std::min(static_cast<size_t>(end - buf), slen);
+                    len = min(static_cast<size_t>(end - buf), slen);
                     memcpy(buf, p, len);
                     buf += len;
                 }
@@ -650,7 +650,7 @@ static size_t _sprintf_num_len(uint64_t ui64, int hexadecimal, size_t width)
             n++;
         } while (ui64 >>= 4);
     }
-    return std::max(n, width);
+    return max(n, width);
 }
 
 Str::Str(int i, int base)
@@ -1138,11 +1138,11 @@ ss_t Str::split_pair(char sep) const
 
     if (pos != nullptr) {
         ptr = pos + 1;
-        return std::make_pair(
+        return make_pair(
                 share(data_, pos - data_),
                 share(ptr, data_ + len_ - ptr));
     }
-    return std::make_pair(*this, nullstr);
+    return make_pair(*this, nullstr);
 }
 
 ss_t Str::split_pair(const Str& sep) const
@@ -1155,11 +1155,11 @@ ss_t Str::split_pair(const Str& sep) const
 
     if (pos != nullptr) {
         ptr = pos + sep.len_;
-        return std::make_pair(
+        return make_pair(
                 share(data_, pos - data_),
                 share(ptr, data_ + len_ - ptr));
     }
-    return std::make_pair(*this, nullstr);
+    return make_pair(*this, nullstr);
 }
 
 s_list_t Str::split_lines() const

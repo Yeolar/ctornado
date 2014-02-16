@@ -38,7 +38,7 @@ HTTPConnection::HTTPConnection(IOStream *stream, const Str& address,
     xheaders_ = xheaders;
     request_ = nullptr;
     request_finished_ = false;
-    header_callback_ = std::bind(&HTTPConnection::on_headers, this, _1);
+    header_callback_ = bind(&HTTPConnection::on_headers, this, _1);
     write_callback_ = nullptr;
 
     log_verb("connection[%p] handle HTTP request", this);
@@ -64,7 +64,7 @@ void HTTPConnection::close()
 
     stream_->close();
     header_callback_ = nullptr;
-    stream_->ioloop_->add_callback(std::bind(&HTTPConnection::free, this));
+    stream_->ioloop_->add_callback(bind(&HTTPConnection::free, this));
 }
 
 void HTTPConnection::write(const Str& chunk, cb_t callback)
@@ -75,8 +75,7 @@ void HTTPConnection::write(const Str& chunk, cb_t callback)
 
     if (!stream_->closed()) {
         write_callback_ = callback;
-        stream_->write(chunk,
-                std::bind(&HTTPConnection::on_write_complete, this));
+        stream_->write(chunk, bind(&HTTPConnection::on_write_complete, this));
     }
 }
 
@@ -211,7 +210,7 @@ void HTTPConnection::on_headers(const Str& data)
             stream_->write("HTTP/1.1 100 (Continue)\r\n\r\n");
         }
         stream_->read_bytes(content_length,
-                std::bind(&HTTPConnection::on_request_body, this, _1));
+                bind(&HTTPConnection::on_request_body, this, _1));
     }
     else {
         request_callback_(request_);
@@ -267,9 +266,9 @@ HTTPRequest::HTTPRequest(HTTPConnection *connection,
         protocol_ = (!protocol.null()) ? protocol : "http";
     }
 
-    auto pair = uri_.split_pair('?');
-    path_ = pair.first;
-    query_ = pair.second;
+    auto kv = uri_.split_pair('?');
+    path_ = kv.first;
+    query_ = kv.second;
     arguments_ = Query::parse(query_);
 
     start_time_ = msec_now();

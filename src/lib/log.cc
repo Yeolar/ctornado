@@ -53,7 +53,7 @@ int Logger::initialize(int level, char *name)
 {
     Logger *l = &logger;
 
-    l->level_ = std::max(EMERG, std::min(level, VVERB));
+    l->level_ = max(EMERG, min(level, VVERB));
     l->name_ = name;
 
     if (name == nullptr || !strlen(name)) {
@@ -75,7 +75,7 @@ void Logger::set_level(int level)
 {
     Logger *l = &logger;
 
-    l->level_ = std::max(EMERG, std::min(level, VVERB));
+    l->level_ = max(EMERG, min(level, VVERB));
     loga("set log level to %s", LOG_NAME[l->level_]);
 }
 

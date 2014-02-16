@@ -119,7 +119,7 @@ int URL::split_netloc(const Str& url, int start)
     for (int i = 0; i < 3; i++) {
         found = url.find(delimiters[i], start);
         if (found >= 0)
-            pos = std::min(pos, found);
+            pos = min(pos, found);
     }
     return pos;
 }
@@ -182,10 +182,10 @@ void Query::parse_extend(const Str& str)
 {
     if (!str.null()) {
         for (auto& qp : str.split('&')) {
-            auto pair = qp.split_pair('=');
-            if (pair.second.len_ == 0)
+            auto kv = qp.split_pair('=');
+            if (kv.second.len_ == 0)
                 continue;
-            map_.insert(pair);
+            map_.insert(kv);
         }
     }
 }

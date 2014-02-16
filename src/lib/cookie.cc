@@ -207,7 +207,7 @@ Str CookieMorsel::get(const Str& key)
     try {
         return map_.at(key);
     }
-    catch (std::out_of_range) {
+    catch (out_of_range) {
         return nullstr;
     }
 }
@@ -218,16 +218,16 @@ Str CookieMorsel::output()
 
     result.push_back(Str::sprintf("%S=%S", &key_, &coded_value_));
 
-    for (auto& pair : map_) {
-        if (pair.second.eq(""))
+    for (auto& kv : map_) {
+        if (kv.second.eq(""))
             continue;
 
-        if (pair.first.eq("secure") || pair.first.eq("httponly")) {
-            result.push_back(_reserved[pair.first]);
+        if (kv.first.eq("secure") || kv.first.eq("httponly")) {
+            result.push_back(_reserved[kv.first]);
         }
         else {
             result.push_back(Str::sprintf("%S=%S",
-                        &_reserved[pair.first], &pair.second));
+                        &_reserved[kv.first], &kv.second));
         }
     }
     return Str::join("; ", result);
@@ -235,8 +235,8 @@ Str CookieMorsel::output()
 
 Cookie::~Cookie()
 {
-    for (auto& pair : map_)
-        delete pair.second;
+    for (auto& kv : map_)
+        delete kv.second;
 }
 
 Str Cookie::value_encode(const Str& value)
@@ -259,7 +259,7 @@ CookieMorsel *Cookie::get(const Str& key)
     try {
         return map_.at(key);
     }
-    catch (std::out_of_range) {
+    catch (out_of_range) {
         return nullptr;
     }
 }
@@ -310,8 +310,8 @@ Str Cookie::output()
 {
     s_list_t lines;
 
-    for (auto& pair : map_) {
-        lines.push_back(Str("Set-Cookie: ").concat(pair.second->output()));
+    for (auto& kv : map_) {
+        lines.push_back(Str("Set-Cookie: ").concat(kv.second->output()));
     }
     return Str::join("\r\n", lines);
 }

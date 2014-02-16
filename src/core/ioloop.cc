@@ -54,10 +54,10 @@ bool IOLoop::initialized()
 void IOLoop::close(bool all_fds)
 {
     if (all_fds) {
-        for (auto& pair : handlers_) {
-            if (::close(pair.first) == -1) {
+        for (auto& kv : handlers_) {
+            if (::close(kv.first) == -1) {
                 log_debug("error closing fd(%d): %s",
-                        pair.first, strerror(errno));
+                        kv.first, strerror(errno));
             }
         }
     }
@@ -115,7 +115,7 @@ void IOLoop::start()
         // to the next iteration of the event loop.
         //
         pthread_mutex_lock(&callback_lock_);
-        std::list<cb_t> callbacks(callbacks_);
+        list<cb_t> callbacks(callbacks_);
         callbacks_.clear();
         pthread_mutex_unlock(&callback_lock_);
 
@@ -137,7 +137,7 @@ void IOLoop::start()
                 }
                 else {
                     msecs = timeout.deadline_ - now;
-                    poll_timeout = std::min(msecs, poll_timeout);
+                    poll_timeout = min(msecs, poll_timeout);
                     break;
                 }
             }
@@ -285,7 +285,7 @@ void PeriodicCallback::schedule_next()
             next_timeout_ += callback_time_;
         }
         timeout_ = ioloop_->add_timeout(next_timeout_,
-                std::bind(&PeriodicCallback::run, this));
+                bind(&PeriodicCallback::run, this));
     }
 }
 

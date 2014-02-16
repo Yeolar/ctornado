@@ -60,6 +60,7 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <deque>
 #include <queue>
 #include <map>
 
@@ -85,27 +86,42 @@ namespace ctornado {
 
 #define nullstr             nullptr
 
+using std::out_of_range;
+using std::min;
+using std::max;
+using std::function;
+using std::bind;
+using std::string;
+using std::list;
+using std::vector;
+using std::deque;
+using std::priority_queue;
+using std::map;
+using std::multimap;
+using std::pair;
+using std::make_pair;
+
 class Str;
 struct StrLess;
 class Socket;
 class HTTPFile;
 class HTTPRequest;
 
-typedef std::pair<int, uint32_t> event_t;
-typedef std::vector<event_t> event_list_t;
-typedef std::list<Socket *> socket_list_t;
-typedef std::pair<Str, Str> ss_t;
-typedef std::vector<Str> s_vect_t;
-typedef std::list<Str> s_list_t;
-typedef std::list<ss_t> ss_list_t;
-typedef std::map<Str, Str, StrLess> ss_map_t;
-typedef std::multimap<Str, Str, StrLess> ss_mmap_t;
-typedef std::multimap<Str, HTTPFile, StrLess> file_mmap_t;
+typedef pair<int, uint32_t> event_t;
+typedef vector<event_t> event_list_t;
+typedef list<Socket *> socket_list_t;
+typedef pair<Str, Str> ss_t;
+typedef vector<Str> s_vect_t;
+typedef list<Str> s_list_t;
+typedef list<ss_t> ss_list_t;
+typedef map<Str, Str, StrLess> ss_map_t;
+typedef multimap<Str, Str, StrLess> ss_mmap_t;
+typedef multimap<Str, HTTPFile, StrLess> file_mmap_t;
 
-typedef std::function<void (void)> cb_t;
-typedef std::function<void (int, uint32_t)> cb_handler_t;
-typedef std::function<void (const Str&)> cb_stream_t;
-typedef std::function<void (HTTPRequest *)> cb_req_t;
+typedef function<void (void)> cb_t;
+typedef function<void (int, uint32_t)> cb_handler_t;
+typedef function<void (const Str&)> cb_stream_t;
+typedef function<void (HTTPRequest *)> cb_req_t;
 
 } // namespace
 
