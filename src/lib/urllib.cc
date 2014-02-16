@@ -192,7 +192,7 @@ void Query::parse_extend(const Str& str)
 
 Str Query::encode()
 {
-    s_list_t qps;
+    StrList qps;
 
     for (auto& qp : map_) {
         qps.push_back(Str::sprintf("%S=%S", &qp.first, &qp.second));
@@ -253,7 +253,7 @@ Str url_join(const Str& base, const Str& url, bool allow_fragments)
 
     auto segs1 = b.path_.split('/');
     auto segs2 = u.path_.split('/');
-    s_vect_t segments;
+    StrVector segments;
 
     segs1.pop_back();
     segs1.insert(segs1.end(), segs2.begin(), segs2.end());
@@ -289,7 +289,7 @@ Str url_join(const Str& base, const Str& url, bool allow_fragments)
         segments.pop_back();
         segments.back() = "";
     }
-    u.path_ = Str::join('/', s_list_t(segments.begin(), segments.end()));
+    u.path_ = Str::join('/', StrList(segments.begin(), segments.end()));
 
     return u.unsplit();
 }

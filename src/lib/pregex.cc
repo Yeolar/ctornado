@@ -113,16 +113,19 @@ RegexMatch::RegexMatch(const Str& str, int *captures, size_t size)
     size_ = size;
 
     if (captures != nullptr) {
-        n = sizeof(int) * size * 2;
-        captures_ = reinterpret_cast<int *>(alloc_w(n));
-        memcpy(captures_, captures, n);
+        n = size * 2;
+        captures_ = new int[n];
+
+        for (size_t i = 0; i < n; i++) {
+            captures_[i] = captures[i];
+        }
     }
 }
 
 RegexMatch::~RegexMatch()
 {
     if (captures_ != nullptr)
-        free_w(captures_);
+        delete[] captures_;
 }
 
 range_t RegexMatch::get(int i)

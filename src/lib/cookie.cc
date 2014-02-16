@@ -166,9 +166,9 @@ static Str _unquote(const Str& str)
     return Str(buffer, n).copy();   // copy to release redundant bytes
 }
 
-ss_map_t _reserved_init()
+StrStrMap _reserved_init()
 {
-    ss_map_t map;
+    StrStrMap map;
 
     map.insert({ "expires", "expires" });
     map.insert({ "path", "Path" });
@@ -182,7 +182,7 @@ ss_map_t _reserved_init()
     return map;
 }
 
-static ss_map_t _reserved(_reserved_init());
+static StrStrMap _reserved(_reserved_init());
 
 void CookieMorsel::set(const Str& key, const Str& value, const Str& coded_value)
 {
@@ -214,7 +214,7 @@ Str CookieMorsel::get(const Str& key)
 
 Str CookieMorsel::output()
 {
-    s_list_t result;
+    StrList result;
 
     result.push_back(Str::sprintf("%S=%S", &key_, &coded_value_));
 
@@ -308,7 +308,7 @@ void Cookie::load(const Str& data)
 
 Str Cookie::output()
 {
-    s_list_t lines;
+    StrList lines;
 
     for (auto& kv : map_) {
         lines.push_back(Str("Set-Cookie: ").concat(kv.second->output()));

@@ -64,6 +64,10 @@
 #include <queue>
 #include <map>
 
+#ifdef USE_JEMALLOC
+#include <jemalloc/jemalloc.h>
+#endif
+
 namespace ctornado {
 
 //
@@ -107,16 +111,16 @@ class Socket;
 class HTTPFile;
 class HTTPRequest;
 
-typedef pair<int, uint32_t> event_t;
-typedef vector<event_t> event_list_t;
-typedef list<Socket *> socket_list_t;
-typedef pair<Str, Str> ss_t;
-typedef vector<Str> s_vect_t;
-typedef list<Str> s_list_t;
-typedef list<ss_t> ss_list_t;
-typedef map<Str, Str, StrLess> ss_map_t;
-typedef multimap<Str, Str, StrLess> ss_mmap_t;
-typedef multimap<Str, HTTPFile, StrLess> file_mmap_t;
+typedef pair<int, uint32_t> Event;
+typedef vector<Event> EventList;
+typedef list<Socket *> SocketList;
+typedef pair<Str, Str> StrStrPair;
+typedef vector<Str> StrVector;
+typedef list<Str> StrList;
+typedef list<StrStrPair> StrStrList;
+typedef map<Str, Str, StrLess> StrStrMap;
+typedef multimap<Str, Str, StrLess> StrStrMMap;
+typedef multimap<Str, HTTPFile, StrLess> FileMMap;
 
 typedef function<void (void)> cb_t;
 typedef function<void (int, uint32_t)> cb_handler_t;

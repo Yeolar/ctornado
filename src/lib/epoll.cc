@@ -55,15 +55,15 @@ void EPoll::remove(int fd)
     ctl(EPOLL_CTL_DEL, fd, 0);
 }
 
-event_list_t *EPoll::poll(int64_t timeout)
+EventList *EPoll::poll(int64_t timeout)
 {
-    event_list_t *event_list;
+    EventList *event_list;
     struct epoll_event evts[MAX_EVENTS];
     int fd;
     uint32_t events;
     int n;
 
-    event_list = new event_list_t();
+    event_list = new EventList;
 
     n = epoll_wait(fd_, evts, MAX_EVENTS, timeout);
     if (n > 0) {

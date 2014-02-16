@@ -57,7 +57,7 @@ public:
     // method and fork_processes to provide greater control over
     // the initialization of a multi-process server.
     //
-    void add_sockets(socket_list_t *sockets);
+    void add_sockets(SocketList *sockets);
 
     //
     // Binds this server to the given port on the given address.
@@ -117,7 +117,7 @@ private:
     void accept_handler(Socket *sock, int fd, uint32_t events);
 
     map<int, Socket *> sockets_;
-    socket_list_t pending_sockets_;
+    SocketList pending_sockets_;
     bool started_;
 };
 

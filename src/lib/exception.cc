@@ -43,12 +43,12 @@ VError::VError(const char *msg, ...)
 VError::~VError() noexcept
 {
     if (msg_)
-        free_w(msg_);
+        delete[] msg_;
 }
 
 void VError::format_message(const char *fmt, va_list varg)
 {
-    msg_ = reinterpret_cast<char *>(alloc_w(ERROR_MSG_LEN));
+    msg_ = new char[ERROR_MSG_LEN];
 
     vscnprintf(msg_, ERROR_MSG_LEN, fmt, varg);
 }
@@ -95,7 +95,7 @@ void HTTPError::format_message(const char *fmt, va_list varg)
 {
     int n;
 
-    msg_ = reinterpret_cast<char *>(alloc_w(ERROR_MSG_LEN));
+    msg_ = new char[ERROR_MSG_LEN];
 
     n = scnprintf(msg_, ERROR_MSG_LEN, "HTTP %d: %s",
             err_, get_response_w3c_name(err_));

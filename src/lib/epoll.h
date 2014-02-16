@@ -33,7 +33,7 @@ public:
     void modify(int fd, uint32_t events);
     void remove(int fd);
 
-    event_list_t *poll(int64_t timeout);
+    EventList *poll(int64_t timeout);
 
     static const uint32_t READ  = EPOLLIN;
     static const uint32_t WRITE = EPOLLOUT;

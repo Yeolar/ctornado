@@ -65,7 +65,7 @@ public:
     Str get(const Str& name, const Str& deft=nullstr);
 
 private:
-    ss_mmap_t map_;
+    StrStrMMap map_;
 };
 
 Str url_join(const Str& base, const Str& url, bool allow_fragments=true);

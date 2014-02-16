@@ -104,7 +104,7 @@ inline Str::~Str()
         buffer_->cnt--;
 
         if (buffer_->cnt == 0)
-            free_w(buffer_);
+            FREE(buffer_);
     }
 }
 
@@ -112,7 +112,7 @@ inline str_buffer_t *Str::alloc(size_t n)
 {
     str_buffer_t *buffer;
 
-    buffer = reinterpret_cast<str_buffer_t *>(alloc_w(n + sizeof(uint16_t)));
+    buffer = reinterpret_cast<str_buffer_t *>(ALLOC(n + sizeof(uint16_t)));
     buffer->cnt = 1;
 
     return buffer;
@@ -334,7 +334,7 @@ inline Str Str::substr(int start, int end) const
     return share(data_ + start, end - start);
 }
 
-inline Str Str::join(const char *sep, const s_list_t& strs)
+inline Str Str::join(const char *sep, const StrList& strs)
 {
     return Str(sep).join(strs);
 }

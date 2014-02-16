@@ -172,7 +172,7 @@ public:
             const Str& version="HTTP/1.0", HTTPHeaders *headers=nullptr,
             const Str& remote_ip=nullstr, const Str& protocol=nullstr,
             const Str& host=nullstr, const Str& body=nullstr,
-            file_mmap_t *files=nullptr);
+            FileMMap *files=nullptr);
     ~HTTPRequest();
 
     //
@@ -217,7 +217,7 @@ public:
     Str path_;
     Str query_;
     Query *arguments_;
-    file_mmap_t *files_;
+    FileMMap *files_;
 
 private:
     int64_t start_time_;

@@ -235,7 +235,7 @@ void HTTPConnection::on_request_body(const Str& data)
 HTTPRequest::HTTPRequest(HTTPConnection *connection,
         const Str& method, const Str& uri, const Str& version,
         HTTPHeaders *headers, const Str& remote_ip, const Str& protocol,
-        const Str& host, const Str& body, file_mmap_t *files)
+        const Str& host, const Str& body, FileMMap *files)
 {
     connection_ = connection;
     method_ = method;
@@ -243,7 +243,7 @@ HTTPRequest::HTTPRequest(HTTPConnection *connection,
     version_ = version;
     body_ = body;
     headers_ = (headers != nullptr) ? headers : new HTTPHeaders();
-    files_ = (files != nullptr) ? files : new file_mmap_t();
+    files_ = (files != nullptr) ? files : new FileMMap();
     host_ = (!host.null()) ? host : headers_->get("Host", "127.0.0.1");
 
     if (connection_ != nullptr && connection_->xheaders_) {

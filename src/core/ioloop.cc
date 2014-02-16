@@ -97,7 +97,7 @@ void IOLoop::remove_handler(int fd)
 void IOLoop::start()
 {
     int64_t now, msecs, poll_timeout;
-    event_list_t *event_list;
+    EventList *event_list;
     int fd;
     uint32_t events;
     cb_handler_t handler;

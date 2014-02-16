@@ -46,7 +46,7 @@ void TCPServer::add_socket(Socket *sock)
             IOLoop::READ);
 }
 
-void TCPServer::add_sockets(socket_list_t *sockets)
+void TCPServer::add_sockets(SocketList *sockets)
 {
     for (auto& sock : *sockets) {
         add_socket(sock);
@@ -56,7 +56,7 @@ void TCPServer::add_sockets(socket_list_t *sockets)
 
 void TCPServer::bind(int port, const char *address, int family, int backlog)
 {
-    socket_list_t *sockets;
+    SocketList *sockets;
 
     sockets = bind_sockets(port, address, family, backlog);
 
@@ -72,12 +72,12 @@ void TCPServer::bind(int port, const char *address, int family, int backlog)
 
 void TCPServer::start()
 {
-    socket_list_t sockets;
+    SocketList sockets;
 
     ASSERT(!started_);
 
     started_ = true;
-    sockets = socket_list_t(pending_sockets_);
+    sockets = SocketList(pending_sockets_);
     pending_sockets_.clear();
     add_sockets(&sockets);
 }

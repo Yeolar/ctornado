@@ -21,12 +21,12 @@ namespace ctornado {
 Regex *HTTPHeaders::normalized_header_re_ = Regex::compile(
         "^[A-Z0-9][a-z0-9]*(-[A-Z0-9][a-z0-9]*)*$");
 
-ss_map_t HTTPHeaders::normalized_headers_;
+StrStrMap HTTPHeaders::normalized_headers_;
 
 HTTPHeaders *HTTPHeaders::parse(const Str& str)
 {
     HTTPHeaders *headers;
-    s_list_t lines;
+    StrList lines;
     Str line;
 
     headers = new HTTPHeaders();
@@ -80,7 +80,7 @@ Str HTTPHeaders::get(const Str& name, const Str& deft)
     }
 }
 
-ss_map_t *HTTPHeaders::get_all()
+StrStrMap *HTTPHeaders::get_all()
 {
     return &map_;
 }
@@ -126,7 +126,7 @@ static int _parse_param(const Str& str)
 //
 // Return the main content-type and a dictionary of options.
 //
-static Str _parse_header(const Str& line, ss_map_t *pdict)
+static Str _parse_header(const Str& line, StrStrMap *pdict)
 {
     size_t pos;
     int i;
@@ -157,7 +157,7 @@ static Str _parse_header(const Str& line, ss_map_t *pdict)
 }
 
 void parse_body_arguments(const Str& content_type, const Str& body,
-        Query *arguments, file_mmap_t *files)
+        Query *arguments, FileMMap *files)
 {
     bool found;
 
@@ -182,12 +182,12 @@ void parse_body_arguments(const Str& content_type, const Str& body,
 }
 
 void parse_multipart_form_data(const Str& boundary, const Str& data,
-        Query *arguments, file_mmap_t *files)
+        Query *arguments, FileMMap *files)
 {
     Str bound;
     int final_boundary_index, eoh;
     HTTPHeaders *headers;
-    ss_map_t disp_params;
+    StrStrMap disp_params;
 
     //
     // The standard allows for the boundary to be quoted in the header,

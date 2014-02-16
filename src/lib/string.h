@@ -132,19 +132,19 @@ public:
 
     Str escape() const;
 
-    s_list_t split(char sep) const;
-    s_list_t split(const Str& sep) const;
-    ss_t split_pair(char sep) const;
-    ss_t split_pair(const Str& sep) const;
-    s_list_t split_lines() const;
+    StrList split(char sep) const;
+    StrList split(const Str& sep) const;
+    StrStrPair split_pair(char sep) const;
+    StrStrPair split_pair(const Str& sep) const;
+    StrList split_lines() const;
 
     Str concat(const Str& str) const;
 
     static Str sprintf(const char *fmt, ...);
 
-    Str join(const s_list_t& strs) const;
-    static Str join(char c, const s_list_t& strs);
-    static Str join(const char *sep, const s_list_t& strs);
+    Str join(const StrList& strs) const;
+    static Str join(char c, const StrList& strs);
+    static Str join(const char *sep, const StrList& strs);
 
     Str replace(const char *oldstr, const char *newstr) const;
 

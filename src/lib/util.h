@@ -56,13 +56,13 @@ namespace ctornado {
 void _assert(const char *cond, const char *name, int line, int panic);
 void _stacktrace(int skip_count);
 
-#define alloc_w(_s)                             \
+#define ALLOC(_s)                               \
     _alloc(static_cast<size_t>(_s), __FILE__, __LINE__)
 
-#define zalloc_w(_s)                            \
+#define ZALLOC(_s)                              \
     _zalloc(static_cast<size_t>(_s), __FILE__, __LINE__)
 
-#define free_w(_p) do {                         \
+#define FREE(_p) do {                           \
     _free(_p, __FILE__, __LINE__);              \
     (_p) = nullptr;                             \
 } while (0)

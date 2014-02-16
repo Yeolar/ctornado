@@ -37,7 +37,7 @@ public:
     Str coded_value_;
 
 private:
-    ss_map_t map_;
+    StrStrMap map_;
 };
 
 class Cookie

@@ -57,7 +57,7 @@ public:
     //
     // Returns map of all (name, value) pairs.
     //
-    ss_map_t *get_all();
+    StrStrMap *get_all();
 
     //
     // Converts a name to Http-Header-Case.
@@ -65,10 +65,10 @@ public:
     Str normalize_name(const Str& name);
 
 private:
-    ss_map_t map_;
+    StrStrMap map_;
 
     static Regex *normalized_header_re_;
-    static ss_map_t normalized_headers_;
+    static StrStrMap normalized_headers_;
 };
 
 //
@@ -96,7 +96,7 @@ public:
 // The arguments and files parameters will be updated with the parsed contents.
 //
 void parse_body_arguments(const Str& content_type, const Str& body,
-        Query *arguments, file_mmap_t *files);
+        Query *arguments, FileMMap *files);
 
 //
 // Parses a multipart/form-data body.
@@ -105,7 +105,7 @@ void parse_body_arguments(const Str& content_type, const Str& body,
 // of the body.
 //
 void parse_multipart_form_data(const Str& boundary, const Str& data,
-        Query *arguments, file_mmap_t *files);
+        Query *arguments, FileMMap *files);
 
 } // namespace
 

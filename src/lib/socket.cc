@@ -160,9 +160,9 @@ int socket_unresolve_peer_descriptor(addr_t *unresolve, int sd)
     return socket_unresolve_addr(unresolve, &addr, addrlen);
 }
 
-socket_list_t *bind_sockets(int port, const char *name, int family, int backlog)
+SocketList *bind_sockets(int port, const char *name, int family, int backlog)
 {
-    socket_list_t *sockets;
+    SocketList *sockets;
     struct addrinfo *cai, *ai, hints;
     char service[UINTMAX_MAXLEN];
     int status;
@@ -186,7 +186,7 @@ socket_list_t *bind_sockets(int port, const char *name, int family, int backlog)
         return nullptr;
     }
 
-    sockets = new socket_list_t;
+    sockets = new SocketList;
 
     for (cai = ai; cai != nullptr; cai = cai->ai_next) {
         sock = Socket::create(cai->ai_family, cai->ai_socktype,

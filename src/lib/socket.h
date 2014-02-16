@@ -80,7 +80,7 @@ int socket_unresolve_peer_descriptor(addr_t *unresolve, int sd);
 //
 // The backlog argument has the same meaning as for socket.listen().
 //
-socket_list_t *bind_sockets(int port, const char *name=nullptr,
+SocketList *bind_sockets(int port, const char *name=nullptr,
         int family=AF_UNSPEC, int backlog=128);
 
 class Socket

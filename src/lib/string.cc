@@ -1086,9 +1086,9 @@ Str Str::escape() const
     return Str(buffer, n);
 }
 
-s_list_t Str::split(char sep) const
+StrList Str::split(char sep) const
 {
-    s_list_t substrs;
+    StrList substrs;
     const char *pos, *ptr;
     size_t n;
 
@@ -1107,9 +1107,9 @@ s_list_t Str::split(char sep) const
     return substrs;
 }
 
-s_list_t Str::split(const Str& sep) const
+StrList Str::split(const Str& sep) const
 {
-    s_list_t substrs;
+    StrList substrs;
     const char *pos, *ptr;
     size_t n;
 
@@ -1128,7 +1128,7 @@ s_list_t Str::split(const Str& sep) const
     return substrs;
 }
 
-ss_t Str::split_pair(char sep) const
+StrStrPair Str::split_pair(char sep) const
 {
     const char *pos, *ptr;
 
@@ -1145,7 +1145,7 @@ ss_t Str::split_pair(char sep) const
     return make_pair(*this, nullstr);
 }
 
-ss_t Str::split_pair(const Str& sep) const
+StrStrPair Str::split_pair(const Str& sep) const
 {
     const char *pos, *ptr;
 
@@ -1162,9 +1162,9 @@ ss_t Str::split_pair(const Str& sep) const
     return make_pair(*this, nullstr);
 }
 
-s_list_t Str::split_lines() const
+StrList Str::split_lines() const
 {
-    s_list_t substrs;
+    StrList substrs;
     const char *pos, *ptr, *end;
 
     ASSERT(data_ != nullptr);
@@ -1225,7 +1225,7 @@ Str Str::sprintf(const char *fmt, ...)
     return Str(buffer, n);
 }
 
-Str Str::join(const s_list_t& strs) const
+Str Str::join(const StrList& strs) const
 {
     ASSERT(data_ != nullptr);
 
@@ -1259,7 +1259,7 @@ Str Str::join(const s_list_t& strs) const
     return Str(buffer, n);
 }
 
-Str Str::join(char c, const s_list_t& strs)
+Str Str::join(char c, const StrList& strs)
 {
     if (strs.size() == 0)
         return "";
