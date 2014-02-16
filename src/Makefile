@@ -10,7 +10,7 @@ LIBS=$(XLIBS)
 CORES=ioloop.o iostream.o tcpserver.o httputil.o httpserver.o
 WEBS=
 
-TESTS=log_test exception_test
+TESTS=log_test exception_test string_test buffer_test
 
 all: $(LIBS) $(CORES) $(WEBS)
 

@@ -20,7 +20,7 @@ namespace ctornado {
 
 static Logger logger;
 
-const int Logger::EMERG;
+const int Logger::PANIC;
 const int Logger::CRIT;
 const int Logger::ERROR;
 const int Logger::WARN;
@@ -32,7 +32,7 @@ const int Logger::VVERB;
 const size_t Logger::LOG_MAX_LEN;
 
 static const char *LOG_NAME[] =
-    { "EMERG", "CRIT", "ERROR", "WARN", "INFO", "DEBUG", "VERB", "VVERB" };
+    { "PANIC", "CRIT", "ERROR", "WARN", "INFO", "DEBUG", "VERB", "VVERB" };
 
 Logger::Logger()
 {
@@ -53,7 +53,7 @@ int Logger::initialize(int level, char *name)
 {
     Logger *l = &logger;
 
-    l->level_ = max(EMERG, min(level, VVERB));
+    l->level_ = max(PANIC, min(level, VVERB));
     l->name_ = name;
 
     if (name == nullptr || !strlen(name)) {
@@ -63,8 +63,8 @@ int Logger::initialize(int level, char *name)
         l->fd_ = open(name, O_WRONLY | O_APPEND | O_CREAT, 0644);
 
         if (l->fd_ < 0) {
-            log_stderr("opening log file '%s' failed: %s", name,
-                       strerror(errno));
+            log_stderr("opening log file '%s' failed: %s",
+                    name, strerror(errno));
             return -1;
         }
     }
@@ -75,7 +75,7 @@ void Logger::set_level(int level)
 {
     Logger *l = &logger;
 
-    l->level_ = max(EMERG, min(level, VVERB));
+    l->level_ = max(PANIC, min(level, VVERB));
     loga("set log level to %s", LOG_NAME[l->level_]);
 }
 
@@ -86,12 +86,13 @@ bool Logger::loggable(int level)
     return (level <= l->level_);
 }
 
-void Logger::_log(char level, const char *file, int line, int panic,
+void Logger::_log(int level, const char *file, int line, int panic,
         const char *fmt, ...)
 {
     Logger *l = &logger;
     int len, size, errno_save;
     char buf[LOG_MAX_LEN];
+    char level_c;
     va_list args;
     struct tm *local;
     time_t t;
@@ -108,7 +109,9 @@ void Logger::_log(char level, const char *file, int line, int panic,
     t = time(nullptr);
     local = localtime(&t);
 
-    len += scnprintf(buf + len, size - len, "[%c ", level);
+    level_c = (level < 0) ? '-' : LOG_NAME[level][0];
+
+    len += scnprintf(buf + len, size - len, "[%c ", level_c);
     len += strftime(buf + len, size - len, "%y%m%d %H:%M:%S ", local);
     len += scnprintf(buf + len, size - len, "%s:%d] ", file, line);
 

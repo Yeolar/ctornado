@@ -41,7 +41,7 @@ void _stacktrace(int skip_count)
 
 void _assert(const char *cond, const char *name, int line, int panic)
 {
-    log_error("assert '%s' failed @[%s:%d]", cond, name, line);
+    log(Logger::ERROR, name, line, "assert '%s' failed", cond);
     if (panic) {
         _stacktrace(1);
         abort();
@@ -56,10 +56,10 @@ void *_alloc(size_t size, const char *name, int line)
 
     p = malloc(size);
     if (p == nullptr) {
-        log_error("malloc(%zu) failed @[%s:%d]", size, name, line);
+        log(Logger::ERROR, name, line, "malloc(%zu) failed", size);
     }
     else {
-        log_vverb("malloc(%zu) at %p @[%s:%d]", size, p, name, line);
+        log(Logger::VVERB, name, line, "malloc(%zu) at %p", size, p);
     }
     return p;
 }
@@ -79,7 +79,7 @@ void _free(void *ptr, const char *name, int line)
 {
     ASSERT(ptr != nullptr);
 
-    log_vverb("free(%p) @[%s:%d]", ptr, name, line);
+    log(Logger::VVERB, name, line, "free(%p)", ptr);
     free(ptr);
 }
 

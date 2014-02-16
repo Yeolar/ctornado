@@ -42,7 +42,7 @@ void Buffer::merge_prefix(size_t size)
             return;
         }
 
-        size = max(size, size_);
+        size = min(size, size_);
 
         prefix_buf = Str::alloc(size);
         pos = prefix_buf->data;
@@ -68,7 +68,7 @@ void Buffer::merge_prefix(size_t size)
         chunk_dq_.push_front(Str(prefix_buf, size));
     }
     if (chunk_dq_.size() == 0)
-        chunk_dq_.push_front(nullstr);
+        chunk_dq_.push_front("");
 }
 
 void Buffer::double_prefix()

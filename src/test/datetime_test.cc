@@ -14,31 +14,18 @@
 // limitations under the License.
 //
 
-#ifndef __CTORNADO_H
-#define __CTORNADO_H
+#include "ctornado.h"
 
-#define VERSION     "0.1.0"
+using namespace ctornado;
 
-#include "core/core.h"
-#include "lib/util.h"
-#include "lib/log.h"
-#include "lib/exception.h"
-#include "lib/string.h"
-#include "lib/string-inl.h"
-#include "lib/buffer.h"
-#include "lib/timer.h"
-#include "lib/datetime.h"
-#include "lib/socket.h"
-#include "lib/epoll.h"
-#include "lib/pregex.h"
-#include "lib/urllib.h"
-#include "lib/httplib.h"
-#include "lib/cookie.h"
-#include "core/ioloop.h"
-#include "core/iostream.h"
-#include "core/tcpserver.h"
-#include "core/httputil.h"
-#include "core/httpserver.h"
+int main()
+{
+    log_stderr("current microsecond:     %ld", usec_now());
+    log_stderr("current millisecond:     %ld", msec_now());
+    log_stderr("current second:          %ld", sec_now());
 
-#endif // __CTORNADO_H
+    log_stderr("current time (RFC 2822): %s",
+            format_email_date(sec_now()).tos().c_str());
 
+    return 0;
+}
