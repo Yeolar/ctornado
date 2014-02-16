@@ -206,15 +206,9 @@ inline char Str::operator[](int i) const
     return *(data_ + i % len_);
 }
 
-inline char *Str::str() const
+inline std::string Str::tos() const
 {
-    char *s;
-
-    s = reinterpret_cast<char *>(alloc_w(len_ + 1));
-    memcpy(s, data_, len_);
-    *(s + len_) = '\0';
-
-    return s;
+    return std::string(data_, len_);
 }
 
 inline const char *Str::begin() const

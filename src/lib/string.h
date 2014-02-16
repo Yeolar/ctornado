@@ -93,7 +93,7 @@ public:
 
     char operator[](int i) const;
 
-    char *str() const;
+    std::string tos() const;
     int toi() const;
 
     const char *begin() const;

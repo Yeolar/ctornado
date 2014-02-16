@@ -238,8 +238,6 @@ HTTPRequest::HTTPRequest(HTTPConnection *connection,
         HTTPHeaders *headers, const Str& remote_ip, const Str& protocol,
         const Str& host, const Str& body, file_mmap_t *files)
 {
-    char *rip;
-
     connection_ = connection;
     method_ = method;
     uri_ = uri;
@@ -254,10 +252,8 @@ HTTPRequest::HTTPRequest(HTTPConnection *connection,
         remote_ip_ = headers_->get("X-Real-Ip",
                      headers_->get("X-Forwarded-For", remote_ip));
 
-        rip = remote_ip_.str();
-        if (!valid_ip(rip))
+        if (!valid_ip(remote_ip_.tos().c_str()))
             remote_ip_ = remote_ip;
-        free_w(rip);
 
         // AWS uses X-Forwarded-Proto
         protocol_ = headers_->get("X-Scheme",

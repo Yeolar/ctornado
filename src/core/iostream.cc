@@ -76,8 +76,7 @@ void IOStream::connect(const char *host, int port, cb_t callback)
 void IOStream::read_until_regex(const char *regex, cb_stream_t callback)
 {
 #ifdef DEBUG_LOG
-    Str regex_escape = Str(regex).escape();
-    log_verb("read until regex '%.*s'", regex_escape.len_, regex_escape.data_);
+    log_verb("read until regex '%s'", Str(regex).escape().tos().c_str());
 #endif
 
     set_read_callback(callback);
@@ -90,8 +89,7 @@ void IOStream::read_until_regex(const char *regex, cb_stream_t callback)
 void IOStream::read_until(const char *delimiter, cb_stream_t callback)
 {
 #ifdef DEBUG_LOG
-    Str delimiter_escape = Str(delimiter).escape();
-    log_verb("read until '%.*s'", delimiter_escape.len_,delimiter_escape.data_);
+    log_verb("read until '%s'", Str(delimiter).escape().tos().c_str());
 #endif
 
     set_read_callback(callback);

@@ -66,9 +66,8 @@ void HTTPHeaders::add(const Str& name, const Str& value)
     else {
         map_[norm_name] = value;
     }
-    log_verb("headers add (%.*s, %.*s)",
-            norm_name.len_, norm_name.data_,
-            map_[norm_name].len_, map_[norm_name].data_);
+    log_verb("headers add (%s, %s)",
+            norm_name.tos().c_str(), map_[norm_name].tos().c_str());
 }
 
 Str HTTPHeaders::get(const Str& name, const Str& deft)

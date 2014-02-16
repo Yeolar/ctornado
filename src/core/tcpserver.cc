@@ -111,8 +111,8 @@ void TCPServer::handle_connection(Socket *sock)
     memcpy(buffer->data, unresolve.host, n);
     address = Str(buffer, n);
 
-    log_verb("handle connection on fd(%d) from %.*s",
-            sock->fd_, address.len_, address.data_);
+    log_verb("handle connection on fd(%d) from %s",
+            sock->fd_, address.tos().c_str());
 
     try {
         handle_stream(new IOStream(sock, ioloop_), address);

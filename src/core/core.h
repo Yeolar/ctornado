@@ -57,6 +57,7 @@
 #include <memory>
 #include <algorithm>
 #include <functional>
+#include <string>
 #include <list>
 #include <vector>
 #include <queue>
