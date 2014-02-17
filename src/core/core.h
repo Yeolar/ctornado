@@ -113,7 +113,9 @@ class HTTPRequest;
 
 typedef pair<int, uint32_t> Event;
 typedef vector<Event> EventList;
-typedef list<Socket *> SocketList;
+typedef map<int, uint32_t> EventMap;
+typedef vector<Socket *> SocketList;
+typedef map<int, Socket *> SocketMap;
 typedef pair<Str, Str> StrStrPair;
 typedef vector<Str> StrVector;
 typedef list<Str> StrList;

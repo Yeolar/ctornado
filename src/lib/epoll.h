@@ -24,7 +24,7 @@ namespace ctornado {
 class EPoll
 {
 public:
-    EPoll();
+    EPoll(int size=MAX_EVENTS);
     ~EPoll() {}
 
     void close();
@@ -33,17 +33,19 @@ public:
     void modify(int fd, uint32_t events);
     void remove(int fd);
 
-    EventList *poll(int64_t timeout);
+    int poll(struct epoll_event *events, int max_events, int64_t timeout);
+    int poll(EventList *events, int64_t timeout);
+    int poll(EventMap *events, int64_t timeout);
 
     static const uint32_t READ  = EPOLLIN;
     static const uint32_t WRITE = EPOLLOUT;
     static const uint32_t ERROR = EPOLLERR | EPOLLHUP;
 
+    static const int MAX_EVENTS = 128;
+
     int fd_;
 
 private:
-    static const int MAX_EVENTS = 64;
-
     void ctl(int op, int fd, uint32_t events);
 };
 

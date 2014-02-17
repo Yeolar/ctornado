@@ -97,7 +97,6 @@ void IOLoop::remove_handler(int fd)
 void IOLoop::start()
 {
     int64_t now, msecs, poll_timeout;
-    EventList *event_list;
     int fd;
     uint32_t events;
     cb_handler_t handler;
@@ -151,7 +150,7 @@ void IOLoop::start()
             break;
 
         try {
-            event_list = poll_.poll(poll_timeout);
+            poll_.poll(&events_, poll_timeout);
         }
         catch (IOError& e) {
             if (e.no() == EINTR)
@@ -165,9 +164,6 @@ void IOLoop::start()
         // other file descriptors, there may be reentrant calls to
         // this IOLoop that update self._events
         //
-        events_.insert(event_list->begin(), event_list->end());
-        delete event_list;
-
         while (!events_.empty()) {
             auto it = events_.begin();
             events_.erase(it);

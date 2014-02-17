@@ -24,11 +24,13 @@ const uint32_t EPoll::ERROR;
 
 const int EPoll::MAX_EVENTS;
 
-EPoll::EPoll()
+EPoll::EPoll(int size)
 {
     int fd;
 
-    fd = epoll_create(MAX_EVENTS);
+    ASSERT(size > 0);
+
+    fd = epoll_create(size);
     if (fd == -1) {
         log_panic("epoll_create failed: %s", strerror(errno));
     }
@@ -55,37 +57,63 @@ void EPoll::remove(int fd)
     ctl(EPOLL_CTL_DEL, fd, 0);
 }
 
-EventList *EPoll::poll(int64_t timeout)
+int EPoll::poll(struct epoll_event *events, int max_events, int64_t timeout)
 {
-    EventList *event_list;
-    struct epoll_event evts[MAX_EVENTS];
-    int fd;
-    uint32_t events;
     int n;
 
-    event_list = new EventList;
+    n = epoll_wait(fd_, events, max_events, timeout);
+    if (n >= 0) {
+        log_vverb("epoll_wait on fd(%d) poll out %d event(s)", fd_, n);
+    }
+    if (n < 0) {
+        log_vverb("epoll_wait on fd(%d) failed: %s", fd_, strerror(errno));
+        throw IOError(errno);
+    }
+    return n;
+}
 
-    n = epoll_wait(fd_, evts, MAX_EVENTS, timeout);
+int EPoll::poll(EventList *events, int64_t timeout)
+{
+    struct epoll_event evts[MAX_EVENTS];
+    int n;
+    int fd;
+    uint32_t evt;
+
+    n = poll(evts, MAX_EVENTS, timeout);
     if (n > 0) {
         for (int i = 0; i < n; i++) {
             fd = evts[i].data.fd;
-            events = evts[i].events;
+            evt = evts[i].events;
 
             log_vverb("epoll_wait on fd(%d) poll out event(%d, %#x)",
                     fd_, fd, events);
 
-            event_list->push_back(make_pair(fd, events));
+            events->push_back(make_pair(fd, evt));
         }
     }
-    if (n == 0) {
-        log_vverb("epoll_wait on fd(%d) returned no events", fd_);
+    return n;
+}
+
+int EPoll::poll(EventMap *events, int64_t timeout)
+{
+    struct epoll_event evts[MAX_EVENTS];
+    int n;
+    int fd;
+    uint32_t evt;
+
+    n = poll(evts, MAX_EVENTS, timeout);
+    if (n > 0) {
+        for (int i = 0; i < n; i++) {
+            fd = evts[i].data.fd;
+            evt = evts[i].events;
+
+            log_vverb("epoll_wait on fd(%d) poll out event(%d, %#x)",
+                    fd_, fd, events);
+
+            events->insert(make_pair(fd, evt));
+        }
     }
-    if (n < 0) {
-        log_vverb("epoll_wait on fd(%d) failed: %s", fd_, strerror(errno));
-        delete event_list;
-        throw IOError(errno);
-    }
-    return event_list;
+    return n;
 }
 
 void EPoll::ctl(int op, int fd, uint32_t events)
