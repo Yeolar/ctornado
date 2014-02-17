@@ -24,6 +24,7 @@ namespace ctornado {
 class RegexMatch
 {
 public:
+    RegexMatch() : size_(0) {}
     RegexMatch(const Str& str, int *captures, size_t size);
     ~RegexMatch();
 

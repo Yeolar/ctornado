@@ -452,6 +452,7 @@ bool IOStream::read_from_buffer()
     Str str;
     size_t bytes_to_consume, num_bytes;
     int pos, delimiter_len;
+    RegexMatch m;
     cb_stream_t callback;
 
     log_verb("consume data (buffer -> )");
@@ -514,7 +515,13 @@ bool IOStream::read_from_buffer()
         if (read_buffer_.size() > 0) {
             while (true) {
                 str = read_buffer_.top();
-                RegexMatch m = read_regex_->exec(str, 1);
+                try {
+                    m = read_regex_->exec(str, 1);
+                }
+                catch (Error& e) {
+                    log_verb("IOStream read_regex exec error: %s", e.what());
+                    break;
+                }
 
                 if (!m.empty()) {
                     callback = read_callback_;

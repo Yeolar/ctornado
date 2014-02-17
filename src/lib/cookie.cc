@@ -280,10 +280,17 @@ void Cookie::set(const Str& key, const Str& value)
 void Cookie::load(const Str& data)
 {
     CookieMorsel *cm = nullptr;
+    RegexMatch m;
     Str key, value, str = data;
 
     while (str.len_ > 0) {
-        RegexMatch m = _cookie_pattern->exec(str);
+        try {
+            m = _cookie_pattern->exec(str);
+        }
+        catch (Error& e) {
+            log_vverb("Cookie regex exec error: %s", e.what());
+            break;
+        }
         if (m.size() == 0)
             break;
 

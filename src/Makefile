@@ -17,8 +17,9 @@ CORES=ioloop.o iostream.o tcpserver.o httputil.o httpserver.o
 WEBS=
 OBJS=$(LIBS) $(CORES) $(WEBS)
 
-TESTS=log_test exception_test string_test buffer_test \
-	  socket_server_test socket_client_test epoll_test
+TESTS=log_test exception_test string_test buffer_test datetime_test \
+	  socket_server_test socket_client_test epoll_test \
+	  pregex_test
 
 all: $(LIBS) $(CORES) $(WEBS)
 
