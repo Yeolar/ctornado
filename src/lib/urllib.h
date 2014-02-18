@@ -68,6 +68,18 @@ private:
     StrStrMMap map_;
 };
 
+//
+// Construct a full (absolute) URL by combining a base URL (base)
+// with another URL (url).
+//
+// Informally, this uses components of the base URL, in particular
+// the addressing scheme, the network location and (part of) the path,
+// to provide missing components in the relative URL.
+//
+// If the allow_fragments argument is false, fragment identifiers
+// are not allowed, even if the URL’s addressing scheme normally
+// does support them. The default value for this argument is true.
+//
 Str url_join(const Str& base, const Str& url, bool allow_fragments=true);
 
 //
@@ -79,3 +91,4 @@ Str url_concat(const Str& url, Query *query);
 } // namespace
 
 #endif // __URLLIB_H
+
