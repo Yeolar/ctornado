@@ -16,6 +16,50 @@
 
 #include "ctornado.h"
 
+void *operator new(size_t size)
+{
+    void *p;
+
+    // malloc(0) is unpredictable; avoid it.
+    if (size == 0)
+        size = 1;
+
+#ifdef USE_JEMALLOC
+    p = je_malloc(size);
+#else
+    p = malloc(size);
+#endif
+
+    while (p == nullptr) {
+        std::new_handler handler = std::set_new_handler(nullptr);
+        std::set_new_handler(handler);
+
+        if (!handler)
+            throw std::bad_alloc();
+
+        handler();
+
+#ifdef USE_JEMALLOC
+        p = je_malloc(size);
+#else
+        p = malloc(size);
+#endif
+    }
+    return p;
+}
+
+void operator delete(void *ptr) noexcept
+{
+    if (ptr == nullptr)
+        return;
+
+#ifdef USE_JEMALLOC
+    je_free(ptr);
+#else
+    free(ptr);
+#endif
+}
+
 namespace ctornado {
 
 void _stacktrace(int skip_count)
@@ -46,6 +90,52 @@ void _assert(const char *cond, const char *name, int line, int panic)
         _stacktrace(1);
         abort();
     }
+}
+
+void *_alloc(size_t size, const char *name, int line)
+{
+    void *p;
+
+    // malloc(0) is unpredictable; avoid it.
+    if (size == 0)
+        size = 1;
+
+#ifdef USE_JEMALLOC
+    p = je_malloc(size);
+#else
+    p = malloc(size);
+#endif
+
+    if (p == nullptr) {
+        log(Logger::ERROR, name, line, "malloc(%zu) failed", size);
+    }
+    else {
+        log(Logger::VVERB, name, line, "malloc(%zu) at %p", size, p);
+    }
+    return p;
+}
+
+void *_zalloc(size_t size, const char *name, int line)
+{
+    void *p;
+
+    p = _alloc(size, name, line);
+    if (p != nullptr) {
+        memset(p, 0, size);
+    }
+    return p;
+}
+
+void _free(void *ptr, const char *name, int line)
+{
+    ASSERT(ptr != nullptr);
+
+    log(Logger::VVERB, name, line, "free(%p)", ptr);
+#ifdef USE_JEMALLOC
+    je_free(ptr);
+#else
+    free(ptr);
+#endif
 }
 
 int isnscntrl(int c)

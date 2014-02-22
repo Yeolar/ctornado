@@ -23,7 +23,6 @@
 #include "lib/log.h"
 #include "lib/exception.h"
 #include "lib/util.h"
-#include "lib/util-inl.h"
 #include "lib/string.h"
 #include "lib/string-inl.h"
 #include "lib/buffer.h"
