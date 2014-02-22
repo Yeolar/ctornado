@@ -452,7 +452,7 @@ bool IOStream::read_from_buffer()
     Str str;
     size_t bytes_to_consume, num_bytes;
     int pos, delimiter_len;
-    RegexMatch m;
+    RegexMatch *m;
     cb_stream_t callback;
 
     log_verb("consume data (buffer -> )");
@@ -513,7 +513,12 @@ bool IOStream::read_from_buffer()
     }
     else if (read_regex_ != nullptr) {
         if (read_buffer_.size() > 0) {
+            m = nullptr;
+
             while (true) {
+                if (m != nullptr)
+                    delete m;
+
                 str = read_buffer_.top();
                 try {
                     m = read_regex_->exec(str, 1);
@@ -523,7 +528,7 @@ bool IOStream::read_from_buffer()
                     break;
                 }
 
-                if (!m.empty()) {
+                if (!m->empty()) {
                     callback = read_callback_;
 
                     read_callback_ = nullptr;
@@ -531,7 +536,8 @@ bool IOStream::read_from_buffer()
                     delete read_regex_;
                     read_regex_ = nullptr;
 
-                    run_callback(callback, consume(m.get(0).end));
+                    run_callback(callback, consume(m->get(0).end));
+                    delete m;
                     return true;
                 }
                 if (read_buffer_.size() == 1) {
@@ -539,6 +545,8 @@ bool IOStream::read_from_buffer()
                 }
                 read_buffer_.double_prefix();
             }
+            if (m != nullptr)
+                delete m;
         }
     }
     return false;

@@ -93,12 +93,14 @@ Str HTTPHeaders::normalize_name(const Str& name)
         return normalized_headers_.at(name);
     }
     catch (out_of_range) {
-        RegexMatch m = normalized_header_re_->exec(name, 1);
+        RegexMatch *m = normalized_header_re_->exec(name, 1);
 
-        if (!m.empty())
+        if (!m->empty())
             normalized = name;
         else
             normalized = name.capitalize_each('-');
+
+        delete m;
 
         normalized_headers_[name] = normalized;
         return normalized;

@@ -38,6 +38,36 @@ static Regex *_cookie_pattern = Regex::compile(
     "[\\w\\d!#%&'~_`><@,:/\\$\\*\\+\\-\\.\\^\\|\\)\\(\\?\\}\\{\\=]*)"
     "\\s*;?");
 
+//
+// These quoting routines conform to the RFC2109 specification, which in
+// turn references the character definitions from RFC2068.  They provide
+// a two-way quoting algorithm.  Any non-text character is translated
+// into a 4 character sequence: a forward-slash followed by the
+// three-digit octal equivalent of the character.  Any '\' or '"' is
+// quoted with a preceding '\' slash.
+//
+// Because of the way browsers really handle cookies (as opposed
+// to what the RFC says) we also encode , and ;
+//
+static int _legal_chars[] = {
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,1,0,1,1,1,1,1,0,0,1,1,0,1,1,0,    // !#$%&'*+-.
+    1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,    // 0-9
+    0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,    // A-O
+    1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,    // P-Z^_
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,    // `a-o
+    1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,0,    // p-z|~
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+};
+
 static int _translator[] = {
     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -59,7 +89,7 @@ static int _translator[] = {
 
 static int _is_legal_char(int c)
 {
-    return c >= 0 ? _translator[c] == 0 : 0;
+    return c >= 0 ? _legal_chars[c] : 0;
 }
 
 static Str _quote(const Str& str)
@@ -70,6 +100,12 @@ static Str _quote(const Str& str)
     int i = 0, j = 0, n;
     uint8_t c;
 
+    //
+    // If the string does not need to be double-quoted,
+    // then just return the string.  Otherwise, surround
+    // the string in doublequotes and precede quote (with a \)
+    // special characters.
+    //
     if (str.all(_is_legal_char))
         return str;
 
@@ -122,13 +158,17 @@ static Str _unquote(const Str& str)
     size_t n;
     Str sub;
 
+    //
+    // If there aren't any doublequotes,
+    // then there can't be any special characters.  See RFC 2109.
+    //
     if (str.len_ < 2)
         return str;
 
     if (str[0] != '"' || str[-1] != '"')
         return str;
 
-    sub = str.substr(1, str.len_ - 1);
+    sub = str.substr(1, str.len_ - 1);      // remove the "s
     pos = sub.begin();
     end = sub.end();
 
@@ -170,14 +210,14 @@ StrStrMap _reserved_init()
 {
     StrStrMap map;
 
-    map.insert({ "expires", "expires" });
-    map.insert({ "path", "Path" });
-    map.insert({ "comment", "Comment" });
-    map.insert({ "domain", "Domain" });
-    map.insert({ "max-age", "Max-Age" });
-    map.insert({ "secure", "secure" });
-    map.insert({ "httponly", "httponly" });
-    map.insert({ "version", "Version" });
+    map.insert({ "expires"  , "expires"  });
+    map.insert({ "path"     , "Path"     });
+    map.insert({ "comment"  , "Comment"  });
+    map.insert({ "domain"   , "Domain"   });
+    map.insert({ "max-age"  , "Max-Age"  });
+    map.insert({ "secure"   , "secure"   });
+    map.insert({ "httponly" , "httponly" });
+    map.insert({ "version"  , "Version"  });
 
     return map;
 }
@@ -186,26 +226,27 @@ static StrStrMap _reserved(_reserved_init());
 
 void CookieMorsel::set(const Str& key, const Str& value, const Str& coded_value)
 {
-    if (_reserved.find(key.lower()) == _reserved.end()) {
+    if (_reserved.find(key.lower()) == _reserved.end() &&
+            key.all(_is_legal_char)) {
         key_ = key;
         value_ = value;
         coded_value_ = coded_value;
     }
 }
 
-void CookieMorsel::set(const Str& key, const Str& value)
+void CookieMorsel::set_attribute(const Str& key, const Str& value)
 {
     Str k = key.lower();
 
     if (_reserved.find(k) != _reserved.end()) {
-        map_[k] = value;
+        attributes_[k] = value;
     }
 }
 
-Str CookieMorsel::get(const Str& key)
+Str CookieMorsel::get_attribute(const Str& key)
 {
     try {
-        return map_.at(key);
+        return attributes_.at(key);
     }
     catch (out_of_range) {
         return nullstr;
@@ -218,7 +259,7 @@ Str CookieMorsel::output()
 
     result.push_back(Str::sprintf("%S=%S", &key_, &coded_value_));
 
-    for (auto& kv : map_) {
+    for (auto& kv : attributes_) {
         if (kv.second.eq(""))
             continue;
 
@@ -264,6 +305,11 @@ CookieMorsel *Cookie::get(const Str& key)
     }
 }
 
+void Cookie::set(const Str& key, const Str& value)
+{
+    __set(key, value, _quote(value));
+}
+
 void Cookie::__set(const Str& key, const Str& value, const Str& coded_value)
 {
     if (map_.find(key) == map_.end()) {
@@ -272,45 +318,51 @@ void Cookie::__set(const Str& key, const Str& value, const Str& coded_value)
     map_[key]->set(key, value, coded_value);
 }
 
-void Cookie::set(const Str& key, const Str& value)
-{
-    __set(key, value, _quote(value));
-}
-
 void Cookie::load(const Str& data)
 {
     CookieMorsel *cm = nullptr;
-    RegexMatch m;
-    Str key, value, str = data;
+    RegexMatch *m = nullptr;
+    Str key, value;
+    size_t pos = 0;
 
-    while (str.len_ > 0) {
+    while (pos < data.len_) {
+        if (m != nullptr)
+            delete m;
+
         try {
-            m = _cookie_pattern->exec(str);
+            m = _cookie_pattern->exec(data.substr(pos, -1));
         }
         catch (Error& e) {
             log_vverb("Cookie regex exec error: %s", e.what());
             break;
         }
-        if (m.size() == 0)
+        if (m->size() == 0)      // no more cookies
             break;
 
-        key = m.substr(1);
-        value = m.substr(2);
-        str = str.substr(m.get(0).end, -1);
+        key = m->substr(1);
+        value = m->substr(2);
+        pos += m->get(0).end;
 
+        // Parse the key and value in case it's metainfo
         if (key[0] == '$') {
+            //
+            // Ignore attributes which pertain to the cookie mechanism
+            // as a whole. See RFC 2109.
+            //
             if (cm)
-                cm->set(key.substr(1, -1), value);
+                cm->set_attribute(key.substr(1, -1), value);
         }
         else if (_reserved.find(key.lower()) != _reserved.end()) {
             if (cm)
-                cm->set(key, _unquote(value));
+                cm->set_attribute(key, _unquote(value));
         }
         else {
             __set(key, _unquote(value), value);
             cm = map_[key];
         }
     }
+    if (m != nullptr)
+        delete m;
 }
 
 Str Cookie::output()

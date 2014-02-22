@@ -1,14 +1,24 @@
-CC=gcc
-CXX=g++
+ifeq ($(USE_CLANG),yes)
+  CC=clang
+  CXX=clang++
+else
+  CC=gcc
+  CXX=g++
+endif
+
 CFLAGS=-O2 -Wall -DDEBUG_LOG -DASSERT_LOG -DHAVE_BACKTRACE -I.
 CPPFLAGS=-std=c++11 -O2 -Wall -DDEBUG_LOG -DASSERT_LOG -DHAVE_BACKTRACE -I.
 LDFLAGS=-lz -lpcre -pthread
 
-USE_JEMALLOC=yes
-
-ALLOC_DEP=../deps/jemalloc/lib/libjemalloc.a
-ALLOC_LD=$(ALLOC_DEP) -ldl
-ALLOC_FLAGS=-DUSE_JEMALLOC -I../deps/jemalloc/include
+ifeq ($(FORCE_LIBC_MALLOC),yes)
+  ALLOC_DEP=
+  ALLOC_LD=
+  ALLOC_FLAGS=
+else
+  ALLOC_DEP=../deps/jemalloc/lib/libjemalloc.a
+  ALLOC_LD=$(ALLOC_DEP) -ldl
+  ALLOC_FLAGS=-DUSE_JEMALLOC -I../deps/jemalloc/include
+endif
 
 XLIBS=util.o log.o exception.o string.o buffer.o datetime.o \
 	  socket.o epoll.o pregex.o urllib.o httplib.o cookie.o
@@ -19,7 +29,7 @@ OBJS=$(LIBS) $(CORES) $(WEBS)
 
 TESTS=log_test exception_test string_test buffer_test datetime_test \
 	  socket_server_test socket_client_test epoll_test \
-	  pregex_test urllib_test
+	  pregex_test urllib_test cookie_test
 
 all: $(LIBS) $(CORES) $(WEBS)
 

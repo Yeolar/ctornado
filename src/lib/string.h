@@ -168,7 +168,9 @@ struct StrLess
         if (s1.data_ == nullptr || s2.data_ == nullptr)
             return false;
 
-        return memcmp(s1.data_, s2.data_, min(s1.len_, s2.len_)) < 0;
+        int n = memcmp(s1.data_, s2.data_, min(s1.len_, s2.len_));
+
+        return (n < 0 || (n == 0 && s1.len_ < s2.len_));
     }
 };
 

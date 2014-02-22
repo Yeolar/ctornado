@@ -24,7 +24,6 @@ namespace ctornado {
 class RegexMatch
 {
 public:
-    RegexMatch() : size_(0) {}
     RegexMatch(const Str& str, int *captures, size_t size);
     ~RegexMatch();
 
@@ -47,7 +46,7 @@ public:
     ~Regex();
 
     static Regex *compile(const char *pattern, int flags=0);
-    RegexMatch exec(const Str& str, int count=-1, int flags=0);
+    RegexMatch *exec(const Str& str, int count=-1, int flags=0);
 
 private:
     pcre *re_;

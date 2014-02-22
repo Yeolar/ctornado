@@ -21,7 +21,7 @@ using namespace ctornado;
 int main()
 {
     Regex *re;
-    RegexMatch m;
+    RegexMatch *m;
     const char *pattern;
     const Str test_strs[] = {
         "This should match... ctornado",
@@ -57,11 +57,11 @@ int main()
             continue;
         }
 
-        for (size_t j = 0; j < m.size(); j++) {
-            range_t pos = m.get(j);
+        for (size_t j = 0; j < m->size(); j++) {
+            range_t pos = m->get(j);
             log_stderr("Match(%d/%d): [%2d:%2d]: '%s'",
-                    j, m.size() - 1, pos.begin, pos.end,
-                    m.substr(j).tos().c_str());
+                    j, m->size() - 1, pos.begin, pos.end,
+                    m->substr(j).tos().c_str());
         }
     }
     delete re;

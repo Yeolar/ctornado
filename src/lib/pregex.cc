@@ -64,7 +64,7 @@ Regex *Regex::compile(const char *pattern, int flags)
     return new Regex(re, extra, pattern);
 }
 
-RegexMatch Regex::exec(const Str& str, int count, int flags)
+RegexMatch *Regex::exec(const Str& str, int count, int flags)
 {
     int n = (count == -1) ? 10 : count;
     int captures[n * 3];
@@ -81,7 +81,7 @@ RegexMatch Regex::exec(const Str& str, int count, int flags)
     if (m < 0) {
         switch (m) {
         case PCRE_ERROR_NOMATCH:
-            return RegexMatch(str, nullptr, 0);
+            return new RegexMatch(str, nullptr, 0);
         case PCRE_ERROR_NULL:
             throw RegexError("Something is full");
         case PCRE_ERROR_BADOPTION:
@@ -101,7 +101,7 @@ RegexMatch Regex::exec(const Str& str, int count, int flags)
             log_warn("too many substrings to fit in RegexMatch object");
         m = n;
     }
-    return RegexMatch(str, captures, m);
+    return new RegexMatch(str, captures, m);
 }
 
 RegexMatch::RegexMatch(const Str& str, int *captures, size_t size)

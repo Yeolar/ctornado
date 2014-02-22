@@ -18,6 +18,8 @@
 
 namespace ctornado {
 
+#define DATE_BUF_SIZE   64
+
 int64_t usec_now()
 {
     struct timeval t;
@@ -43,11 +45,14 @@ int64_t sec_now()
 Str format_date(time_t *timer, const char *fmt)
 {
     str_buffer_t *buffer;
+    size_t n;
 
-    buffer = Str::alloc(30);
-    strftime(buffer->data, 30, fmt, localtime(timer));
-
-    return Str(buffer, 30);
+    buffer = Str::alloc(DATE_BUF_SIZE);
+    n = strftime(buffer->data, DATE_BUF_SIZE, fmt, localtime(timer));
+    if (n == 0) {
+        log_error("format_date exceeds the temp buffer size");
+    }
+    return Str(buffer, n);
 }
 
 Str format_date(int64_t timestamp, const char *fmt)
