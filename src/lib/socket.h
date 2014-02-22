@@ -36,6 +36,9 @@ typedef struct {
     char service[NI_MAXSERV];
 } addr_t;
 
+Str get_peer_ip(int fd);
+int get_peer_port(int fd);
+
 bool valid_ip(const char *ip);
 bool valid_port(int port);
 

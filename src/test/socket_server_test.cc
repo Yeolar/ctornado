@@ -31,7 +31,7 @@ void serve(Socket *sock)
         try {
             client = sock->accept();
 
-            socket_unresolve_descriptor(&unresolve, client->fd_);
+            socket_unresolve_peer_descriptor(&unresolve, client->fd_);
             log_info("accept client: %s", unresolve.host);
         }
         catch (Error& e) {
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
         exit(1);
 
     try {
-        sock->bind("localhost", 8888);
+        sock->bind("", 8888);
         sock->listen(10);
     }
     catch (Error& e) {

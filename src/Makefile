@@ -29,7 +29,8 @@ OBJS=$(LIBS) $(CORES) $(WEBS)
 
 TESTS=log_test exception_test string_test buffer_test datetime_test \
 	  socket_server_test socket_client_test epoll_test \
-	  pregex_test urllib_test cookie_test
+	  pregex_test urllib_test cookie_test \
+	  ioloop_test
 
 all: $(LIBS) $(CORES) $(WEBS)
 

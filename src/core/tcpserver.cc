@@ -99,19 +99,10 @@ void TCPServer::handle_stream(IOStream *stream, const Str& address)
 
 void TCPServer::handle_connection(Socket *sock)
 {
-    addr_t unresolve;
-    str_buffer_t *buffer;
-    size_t n;
-    Str address;
+    Str address = get_peer_ip(sock->fd_);
 
-    socket_unresolve_descriptor(&unresolve, sock->fd_);
-
-    n = strlen(unresolve.host);
-    buffer = Str::alloc(n);
-    memcpy(buffer->data, unresolve.host, n);
-    address = Str(buffer, n);
-
-    log_verb("handle connection on fd(%d) from %s", sock->fd_, unresolve.host);
+    log_verb("handle connection on fd(%d) from %s",
+            sock->fd_, address.tos().c_str());
 
     try {
         handle_stream(new IOStream(sock, ioloop_), address);

@@ -27,6 +27,30 @@ namespace ctornado {
 #define SOCK_INET_ADDR_STRLEN           \
     MAX(SOCK_INET4_ADDR_STRLEN, SOCK_INET6_ADDR_STRLEN)
 
+Str get_peer_ip(int fd)
+{
+    addr_t unresolve;
+    str_buffer_t *buffer;
+    size_t n;
+
+    socket_unresolve_peer_descriptor(&unresolve, fd);
+
+    n = strlen(unresolve.host);
+    buffer = Str::alloc(n);
+    memcpy(buffer->data, unresolve.host, n);
+
+    return Str(buffer, n);
+}
+
+int get_peer_port(int fd)
+{
+    addr_t unresolve;
+
+    socket_unresolve_peer_descriptor(&unresolve, fd);
+
+    return atoi(unresolve.service);
+}
+
 bool valid_ip(const char *ip)
 {
     struct addrinfo *ai, hints;
@@ -82,6 +106,7 @@ static int _resolve_inet(sockinfo_t *si, int family, const char *name, int port)
         // If AI_PASSIVE flag is specified, and name is nullptr or "",
         // the returned socket address will contain the wildcard IP address.
         //
+        name = nullptr;
         hints.ai_flags |= AI_PASSIVE;
     }
 

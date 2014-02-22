@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     Logger::initialize(Logger::INFO);
 
     sock = Socket::create(AF_INET, SOCK_STREAM, 0);
-    sock->bind("localhost", 8888);
+    sock->bind("", 8888);
     sock->set_nonblocking();
     sock->listen(128);
 
