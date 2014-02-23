@@ -310,7 +310,9 @@ Socket *Socket::accept()
 
     sd = ::accept(fd_, &addr, &addrlen);
     if (sd == -1) {
-        log_vverb("accept on fd(%d) failed: %s", fd_, strerror(errno));
+        if (errno != EAGAIN) {
+            log_vverb("accept on fd(%d) failed: %s", fd_, strerror(errno));
+        }
         throw SocketError(errno);
     }
     return new Socket(sd, family_, socktype_, protocol_);

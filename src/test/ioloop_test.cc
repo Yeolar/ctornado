@@ -34,7 +34,7 @@ void connection_ready(Socket *sock, int fd, uint32_t events)
         }
         client->set_nonblocking();
 
-        log_info("accept client: %s", get_peer_ip(client->fd_).tos().c_str());
+        log_info("Accept client: %s", get_peer_ip(client->fd_).tos().c_str());
         // ...
 
         client->close();
@@ -55,7 +55,7 @@ int main()
     sock->bind("", 8888);
     sock->listen(128);
 
-    log_debug("server listening on port: 8888");
+    log_debug("Listening on port: 8888");
 
     cb_handler_t handler = std::bind(&connection_ready, sock, _1, _2);
     ioloop = IOLoop::instance();

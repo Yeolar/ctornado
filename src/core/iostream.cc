@@ -133,7 +133,7 @@ void IOStream::write(const Str& data, cb_t callback)
 {
     check_closed();
 
-    log_verb("write %zu bytes ( -> buffer)", data.len_);
+    log_verb("write %zu bytes to buffer", data.len_);
 
     if (data.len_ > 0) {
         write_buffer_.push(data);
@@ -455,7 +455,7 @@ bool IOStream::read_from_buffer()
     RegexMatch *m;
     cb_stream_t callback;
 
-    log_verb("consume data (buffer -> )");
+    log_verb("consume data from buffer");
 
     if (streaming_callback_ != nullptr && read_buffer_.size() > 0) {
         bytes_to_consume = read_buffer_.size();
@@ -655,7 +655,7 @@ void IOStream::add_io_state(uint32_t state)
         // connection has been closed, so there can be no future events
         return;
 
-    log_verb("add IO state(%#x) to fd(%d)", state, socket_->fd_);
+    log_verb("add IO state(%s) to fd(%d)", strevent(state), socket_->fd_);
 
     if (state_ == 0) {
         state_ = IOLoop::ERROR | state;

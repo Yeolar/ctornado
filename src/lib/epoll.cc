@@ -18,9 +18,21 @@
 
 namespace ctornado {
 
+const char *strevent(uint32_t event)
+{
+    if (event & (EPOLLIN | EPOLLOUT))
+        return "RW";
+    if (event & EPOLLIN)
+        return "R";
+    if (event & EPOLLOUT)
+        return "W";
+    return "-";
+}
+
 const uint32_t EPoll::READ;
 const uint32_t EPoll::WRITE;
 const uint32_t EPoll::ERROR;
+const uint32_t EPoll::ET;
 
 const int EPoll::MAX_EVENTS;
 
@@ -85,8 +97,8 @@ int EPoll::poll(EventList *events, int64_t timeout)
             fd = evts[i].data.fd;
             evt = evts[i].events;
 
-            log_vverb("epoll_wait on fd(%d) poll out event(%d, %#x)",
-                    fd_, fd, events);
+            log_vverb("epoll_wait on fd(%d) poll out event(%d, %s)",
+                    fd_, fd, strevent(evt));
 
             events->push_back(make_pair(fd, evt));
         }
@@ -107,8 +119,8 @@ int EPoll::poll(EventMap *events, int64_t timeout)
             fd = evts[i].data.fd;
             evt = evts[i].events;
 
-            log_vverb("epoll_wait on fd(%d) poll out event(%d, %#x)",
-                    fd_, fd, events);
+            log_vverb("epoll_wait on fd(%d) poll out event(%d, %s)",
+                    fd_, fd, strevent(evt));
 
             events->insert(make_pair(fd, evt));
         }
@@ -125,8 +137,8 @@ void EPoll::ctl(int op, int fd, uint32_t events)
     evt.data.fd = fd;
 
     if (epoll_ctl(fd_, op, fd, &evt) < 0) {
-        log_vverb("epoll_ctl on fd(%d) with event(%d, %#x) failed: %s",
-                fd_, fd, strerror(errno));
+        log_vverb("epoll_ctl on fd(%d) with event(%d, %s) failed: %s",
+                fd_, fd, strevent(events), strerror(errno));
         throw IOError(errno);
     }
 }

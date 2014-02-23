@@ -26,10 +26,12 @@ IOLoop *IOLoop::instance_ = nullptr;
 const uint32_t IOLoop::READ;
 const uint32_t IOLoop::WRITE;
 const uint32_t IOLoop::ERROR;
+const uint32_t IOLoop::ET;
 
-IOLoop::IOLoop()
+IOLoop::IOLoop(bool edge_triggered)
 {
     pthread_mutex_init(&callback_lock_, nullptr);
+    edge_triggered_ = edge_triggered;
     running_ = false;
     stopped_ = false;
 }
@@ -39,7 +41,7 @@ IOLoop *IOLoop::instance()
     if (instance_ == nullptr) {
         pthread_mutex_lock(&_ioloop_instance_lock);
         if (instance_ == nullptr) {
-            instance_ = new IOLoop();
+            instance_ = new IOLoop(true);
         }
         pthread_mutex_unlock(&_ioloop_instance_lock);
     }
@@ -66,7 +68,10 @@ void IOLoop::close(bool all_fds)
 
 void IOLoop::add_handler(int fd, cb_handler_t handler, uint32_t events)
 {
-    log_verb("add handler on fd(%d) with events(%#x)", fd, events);
+    log_verb("add handler on fd(%d) with events(%s)", fd, strevent(events));
+
+    if (edge_triggered_)
+        events |= ET;
 
     handlers_.insert({ fd, handler });
     poll_.add(fd, events | ERROR);
@@ -74,7 +79,10 @@ void IOLoop::add_handler(int fd, cb_handler_t handler, uint32_t events)
 
 void IOLoop::update_handler(int fd, uint32_t events)
 {
-    log_verb("update handler on fd(%d) with events(%#x)", fd, events);
+    log_verb("update handler on fd(%d) with events(%s)", fd, strevent(events));
+
+    if (edge_triggered_)
+        events |= ET;
 
     poll_.modify(fd, events | ERROR);
 }
@@ -172,7 +180,8 @@ void IOLoop::start()
             events = it->second;
             handler = handlers_[fd];
 
-            log_verb("run handler on fd(%d) with events(%#x)", fd, events);
+            log_verb("run handler on fd(%d) with events(%s)",
+                    fd, strevent(events));
             try {
                 handler(fd, events);
             }

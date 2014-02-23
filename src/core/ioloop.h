@@ -49,11 +49,11 @@ struct TimeoutLess
 class IOLoop
 {
 public:
-    IOLoop();
+    IOLoop(bool edge_triggered);
     virtual ~IOLoop() {}
 
     //
-    // Returns a global IOLoop instance.
+    // Returns a global edge triggered IOLoop instance.
     //
     // Most single-threaded applications have a single, global IOLoop.
     //
@@ -164,11 +164,13 @@ public:
     static const uint32_t READ  = EPoll::READ;
     static const uint32_t WRITE = EPoll::WRITE;
     static const uint32_t ERROR = EPoll::ERROR;
+    static const uint32_t ET    = EPoll::ET;
 
 private:
     static IOLoop *instance_;
 
     EPoll poll_;
+    bool edge_triggered_;
     map<int, cb_handler_t> handlers_;
     map<int, uint32_t> events_;
     list<cb_t> callbacks_;

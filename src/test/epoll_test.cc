@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     uint32_t events;
     int n;
 
-    Logger::initialize(Logger::INFO);
+    Logger::initialize(Logger::VVERB);
 
     sock = Socket::create(AF_INET, SOCK_STREAM, 0);
     sock->bind("", 8888);

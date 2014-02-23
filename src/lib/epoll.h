@@ -21,6 +21,8 @@
 
 namespace ctornado {
 
+const char *strevent(uint32_t event);
+
 class EPoll
 {
 public:
@@ -40,6 +42,7 @@ public:
     static const uint32_t READ  = EPOLLIN;
     static const uint32_t WRITE = EPOLLOUT;
     static const uint32_t ERROR = EPOLLERR | EPOLLHUP;
+    static const uint32_t ET    = EPOLLET;
 
     static const int MAX_EVENTS = 128;
 
