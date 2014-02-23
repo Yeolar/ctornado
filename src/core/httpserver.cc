@@ -201,8 +201,8 @@ void HTTPConnection::on_headers(const Str& data)
         content_length = content_length_str.toi();
 
         if (content_length > stream_->max_buffer_size_) {
-            log_info("Malformed HTTP request from %.*s:"
-                    " Content-Length too long", address_.len_, address_.data_);
+            log_info("Malformed HTTP request from %.*s: "
+                     "Content-Length too long", address_.len_, address_.data_);
             close();
             return;
         }

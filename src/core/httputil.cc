@@ -36,7 +36,10 @@ HTTPHeaders *HTTPHeaders::parse(const Str& str)
         line = *it;
         it++;
 
-        while (it != lines.end() && isspace((*it)[0])) {
+        if (line.empty())
+            continue;
+
+        while (it != lines.end() && !(*it).empty() && isspace((*it)[0])) {
             line = line.concat(*it);
             it++;
         }
