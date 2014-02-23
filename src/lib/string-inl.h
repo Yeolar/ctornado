@@ -187,6 +187,13 @@ inline Str& Str::operator=(const Str& str)
 inline Str& Str::operator=(Str&& str)
 {
     if (this != &str) {
+        //
+        // With the same buffer, e.g.:
+        //  s = s.substr(1, -1)
+        //
+        if (buffer_ != nullptr && buffer_ == str.buffer_)
+            str.buffer_->cnt--;
+
         len_ = str.len_;
         data_ = str.data_;
         buffer_ = str.buffer_;
@@ -200,7 +207,12 @@ inline Str& Str::operator=(Str&& str)
 
 inline char Str::operator[](int i) const
 {
-    if (i < -static_cast<int>(len_) || i >= static_cast<int>(len_))
+    if (i >= static_cast<int>(len_))
+        throw out_of_range("Invalid position");
+
+    i += len_;
+
+    if (i < 0)
         throw out_of_range("Invalid position");
 
     return *(data_ + i % len_);

@@ -215,7 +215,7 @@ void parse_multipart_form_data(const Str& boundary, const Str& data,
             Str::sprintf("--%S\r\n", &bound));
 
     for (auto& part : parts) {
-        if (part.null())
+        if (part.empty())
             continue;
 
         eoh = part.find("\r\n\r\n");
@@ -233,23 +233,29 @@ void parse_multipart_form_data(const Str& boundary, const Str& data,
             delete headers;
             continue;
         }
-        Str value = part.substr(eoh + 4, part.len_ - 2);
-
         auto it = disp_params.find("name");
         if (it == disp_params.end()) {
             log_warn("multipart/form-data value missing name");
             delete headers;
             continue;
         }
+
         Str name = it->second;
+        Str value = part.substr(eoh + 4, part.len_ - 2);    // exclude \r\n
 
         it  = disp_params.find("filename");
         if (it == disp_params.end()) {
             arguments->add(name, value);
+            log_verb("body arguments add (%s, %s)",
+                    name.tos().c_str(), value.tos().c_str());
         }
         else {
             Str ctype = headers->get("Content-Type", "application/unknown");
             files->insert({ name, HTTPFile(it->second, value, ctype) });
+            log_verb("body arguments add file (%s, %s, %s)",
+                    name.tos().c_str(),
+                    it->second.tos().c_str(),
+                    ctype.tos().c_str());
         }
         delete headers;
 
