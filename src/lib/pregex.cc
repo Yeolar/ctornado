@@ -77,7 +77,8 @@ RegexMatch *Regex::exec(const Str& str, int count, int flags)
     //  PCRE_NOTEOL
     //  PCRE_NOTEMPTY
     //
-    m = pcre_exec(re_, extra_, str.data_, str.len_, 0, flags, captures, n * 3);
+    m = pcre_exec(re_, extra_, str.data(), str.len(), 0, flags,
+            captures, n * 3);
     if (m < 0) {
         switch (m) {
         case PCRE_ERROR_NOMATCH:

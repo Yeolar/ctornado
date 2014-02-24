@@ -27,14 +27,14 @@ void Buffer::merge_prefix(size_t size)
 
     log_vverb("merge prefix %zu bytes (at most) of buffer", size);
 
-    if (chunk_dq_.size() == 1 && chunk_dq_[0].len_ <= size)
+    if (chunk_dq_.size() == 1 && chunk_dq_[0].len() <= size)
         return;
 
     if (chunk_dq_.size() > 0 && size > 0) {
-        if (chunk_dq_[0].len_ == size)
+        if (chunk_dq_[0].len() == size)
             return;
 
-        if (chunk_dq_[0].len_ > size) {
+        if (chunk_dq_[0].len() > size) {
             chunk = chunk_dq_[0];
             chunk_dq_.pop_front();
             chunk_dq_.push_front(chunk.substr(size, -1));
@@ -52,17 +52,17 @@ void Buffer::merge_prefix(size_t size)
             chunk = chunk_dq_[0];
             chunk_dq_.pop_front();
 
-            if (chunk.len_ > remaining) {
+            if (chunk.len() > remaining) {
                 chunk_dq_.push_front(chunk.substr(remaining, -1));
 
-                memcpy(pos, chunk.data_, remaining);
+                memcpy(pos, chunk.data(), remaining);
                 pos += remaining;
                 remaining = 0;
             }
             else {
-                memcpy(pos, chunk.data_, chunk.len_);
-                pos += chunk.len_;
-                remaining -= chunk.len_;
+                memcpy(pos, chunk.data(), chunk.len());
+                pos += chunk.len();
+                remaining -= chunk.len();
             }
         }
         chunk_dq_.push_front(Str(prefix_buf, size));
@@ -78,7 +78,7 @@ void Buffer::double_prefix()
     if (chunk_dq_.size() < 2)
         return;
 
-    n = max(chunk_dq_[0].len_ * 2, chunk_dq_[0].len_ + chunk_dq_[1].len_);
+    n = max(chunk_dq_[0].len() * 2, chunk_dq_[0].len() + chunk_dq_[1].len());
     merge_prefix(n);
 }
 
@@ -95,23 +95,23 @@ void Buffer::remove_prefix(size_t size)
         chunk = chunk_dq_[0];
         chunk_dq_.pop_front();
 
-        if (chunk.len_ > remaining) {
+        if (chunk.len() > remaining) {
             chunk_dq_.push_front(chunk.substr(remaining, -1));
             size_ -= remaining;
             remaining = 0;
         }
         else {
-            size_ -= chunk.len_;
-            remaining -= chunk.len_;
+            size_ -= chunk.len();
+            remaining -= chunk.len();
         }
     }
 }
 
 void Buffer::push(const Str& chunk)
 {
-    log_vverb("push %zu bytes to buffer", chunk.len_);
+    log_vverb("push %zu bytes to buffer", chunk.len());
 
-    size_ += chunk.len_;
+    size_ += chunk.len();
     chunk_dq_.push_back(chunk);
 }
 
@@ -123,9 +123,9 @@ Str Buffer::pop()
 
     chunk = chunk_dq_[0];
     chunk_dq_.pop_front();
-    size_ -= chunk.len_;
+    size_ -= chunk.len();
 
-    log_vverb("pop %zu bytes from buffer", chunk.len_);
+    log_vverb("pop %zu bytes from buffer", chunk.len());
 
     return chunk;
 }

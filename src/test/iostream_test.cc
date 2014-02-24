@@ -52,10 +52,10 @@ void on_headers(IOStream *stream, const Str& data)
 
 void on_body(IOStream *stream, const Str& data)
 {
-    int n = data.len_;
+    int n = data.len();
 
     log_debug("Body length: %zu", n);
-    printf("%.*s\n", n, data.data_);
+    printf("%.*s\n", n, data.data());
 
     stream->close();
     ioloop->stop();

@@ -120,7 +120,7 @@ static Str _quote(const Str& str)
         else
             j += _translator[c];
     }
-    n = str.len_ + i + j*3 + 2;
+    n = str.len() + i + j*3 + 2;
     buffer = Str::alloc(n);
 
     ptr = buffer->data;
@@ -162,17 +162,17 @@ static Str _unquote(const Str& str)
     // If there aren't any doublequotes,
     // then there can't be any special characters.  See RFC 2109.
     //
-    if (str.len_ < 2)
+    if (str.len() < 2)
         return str;
 
     if (str[0] != '"' || str[-1] != '"')
         return str;
 
-    sub = str.substr(1, str.len_ - 1);      // remove the "s
+    sub = str.substr(1, str.len() - 1);      // remove the "s
     pos = sub.begin();
     end = sub.end();
 
-    buffer = Str::alloc(sub.len_);
+    buffer = Str::alloc(sub.len());
     ptr = buffer->data;
 
     while (pos < end) {
@@ -325,7 +325,7 @@ void Cookie::load(const Str& data)
     Str key, value;
     size_t pos = 0;
 
-    while (pos < data.len_) {
+    while (pos < data.len()) {
         if (m != nullptr)
             delete m;
 

@@ -122,7 +122,7 @@ void HTTPConnection::finish_request()
     }
     else {
         Str connection_header = request_->headers_->get("Connection");
-        if (connection_header.data_ != nullptr) {
+        if (connection_header.data() != nullptr) {
             connection_header = connection_header.lower();
         }
 
@@ -169,7 +169,7 @@ void HTTPConnection::on_headers(const Str& data)
 
     if (strs.size() != 3) {
         log_info("Malformed HTTP request line from %.*s",
-                address_.len_, address_.data_);
+                address_.len(), address_.data());
         close();
         return;
     }
@@ -180,7 +180,7 @@ void HTTPConnection::on_headers(const Str& data)
 
     if (!version.starts_with("HTTP/")) {
         log_info("Malformed HTTP version in HTTP request from %.*s",
-                address_.len_, address_.data_);
+                address_.len(), address_.data());
         close();
         return;
     }
@@ -202,7 +202,7 @@ void HTTPConnection::on_headers(const Str& data)
 
         if (content_length > stream_->max_buffer_size_) {
             log_info("Malformed HTTP request from %.*s: "
-                     "Content-Length too long", address_.len_, address_.data_);
+                    "Content-Length too long", address_.len(), address_.data());
             close();
             return;
         }

@@ -93,6 +93,9 @@ public:
 
     char operator[](int i) const;
 
+    size_t len() const;
+    const char *data() const;
+
     string tos() const;
     int toi() const;
 
@@ -151,10 +154,9 @@ public:
     void print() const;
     void println() const;
 
+private:
     size_t len_;
     const char *data_;
-
-private:
     str_buffer_t *buffer_;
 };
 
@@ -162,15 +164,15 @@ struct StrLess
 {
     bool operator()(const Str& s1, const Str& s2) const
     {
-        if (s1.data_ == nullptr && s2.data_ == nullptr)
+        if (s1.data() == nullptr && s2.data() == nullptr)
             return true;
 
-        if (s1.data_ == nullptr || s2.data_ == nullptr)
+        if (s1.data() == nullptr || s2.data() == nullptr)
             return false;
 
-        int n = memcmp(s1.data_, s2.data_, min(s1.len_, s2.len_));
+        int n = memcmp(s1.data(), s2.data(), min(s1.len(), s2.len()));
 
-        return (n < 0 || (n == 0 && s1.len_ < s2.len_));
+        return (n < 0 || (n == 0 && s1.len() < s2.len()));
     }
 };
 

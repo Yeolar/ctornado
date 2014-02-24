@@ -25,7 +25,7 @@ void handle_request(HTTPRequest *request)
     message = Str::sprintf("You requested %S\n", &request->uri_);
     request->write(Str::sprintf(
                 "HTTP/1.1 200 OK\r\nContent-Length: %d\r\n\r\n%S",
-                message.len_, &message));
+                message.len(), &message));
     request->finish();
 }
 

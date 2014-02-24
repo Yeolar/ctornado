@@ -133,9 +133,9 @@ void IOStream::write(const Str& data, cb_t callback)
 {
     check_closed();
 
-    log_verb("write %zu bytes to buffer", data.len_);
+    log_verb("write %zu bytes to buffer", data.len());
 
-    if (data.len_ > 0) {
+    if (data.len() > 0) {
         write_buffer_.push(data);
     }
     write_callback_ = callback;
@@ -281,7 +281,7 @@ void IOStream::handle_events(int fd, uint32_t events)
 
 void IOStream::callback_wrapper(cb_t callback)
 {
-    pending_callbacks_ -= 1;
+    pending_callbacks_--;
     try {
         callback();
     }
@@ -309,7 +309,7 @@ void IOStream::run_callback(cb_t callback)
     // * Ensures that the try/except in wrapper() is run outside
     //   of the application's StackContexts
     //
-    pending_callbacks_ += 1;
+    pending_callbacks_++;
     ioloop_->add_callback(bind(&IOStream::callback_wrapper, this, callback));
 }
 
@@ -318,7 +318,7 @@ void IOStream::run_callback(cb_stream_t callback, const Str& data)
     //
     // The same as above.
     //
-    pending_callbacks_ += 1;
+    pending_callbacks_++;
     cb_t cb = bind(callback, data);
     ioloop_->add_callback(bind(&IOStream::callback_wrapper, this, cb));
 }
@@ -333,7 +333,7 @@ void IOStream::handle_read()
         // estabilsh a real pending callback via
         // read_from_buffer or run the close callback.
         //
-        pending_callbacks_ += 1;
+        pending_callbacks_++;
 
         while (true) {
             // Read from the socket until we get EWOULDBLOCK or equivalent.
@@ -342,13 +342,13 @@ void IOStream::handle_read()
         }
     }
     catch (Error& e) {
-        pending_callbacks_ -= 1;
+        pending_callbacks_--;
 
         log_warn("error on read: %s", e.what());
         close();
         return;
     }
-    pending_callbacks_ -= 1;
+    pending_callbacks_--;
 
     if (read_from_buffer())
         return;
@@ -371,7 +371,7 @@ void IOStream::try_inline_read()
     check_closed();
 
     try {
-        pending_callbacks_ += 1;
+        pending_callbacks_++;
 
         while (true) {
             if (read_to_buffer() == 0) {
@@ -381,10 +381,10 @@ void IOStream::try_inline_read()
         }
     }
     catch (Error& e) {
-        pending_callbacks_ -= 1;
+        pending_callbacks_--;
         throw;
     }
-    pending_callbacks_ -= 1;
+    pending_callbacks_--;
 
     if (read_from_buffer())
         return;
@@ -432,11 +432,11 @@ int IOStream::read_to_buffer()
         throw;
     }
 
-    if (chunk.len_ == 0) {
+    if (chunk.len() == 0) {
         return 0;
     }
 
-    log_verb("read %zu bytes data (socket -> buffer)", chunk.len_);
+    log_verb("read %zu bytes data (socket -> buffer)", chunk.len());
     read_buffer_.push(chunk);
 
     if (read_buffer_.size() >= max_buffer_size_) {
@@ -444,7 +444,7 @@ int IOStream::read_to_buffer()
         close();
         throw IOError("Reached maximum read buffer size");
     }
-    return chunk.len_;
+    return chunk.len();
 }
 
 bool IOStream::read_from_buffer()
@@ -596,7 +596,7 @@ void IOStream::handle_write()
         chunk = write_buffer_.top();
 
         try {
-            num_bytes = socket_->send(chunk.data_, chunk.len_);
+            num_bytes = socket_->send(chunk.data(), chunk.len());
         }
         catch (SocketError& e) {
             if (e.no() == EWOULDBLOCK || e.no() == EAGAIN) {

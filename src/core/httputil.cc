@@ -121,7 +121,7 @@ static int _parse_param(const Str& str)
         end = str.find(';', end + 1);
     }
     if (end < 0) {
-        end = str.len_;
+        end = str.len();
     }
     return end;
 }
@@ -141,7 +141,7 @@ static Str _parse_header(const Str& line, StrStrMap *pdict)
     key = line.substr(0, pos);
     parts = line;
 
-    while (pos < parts.len_ && parts[pos] == ';') {
+    while (pos < parts.len() && parts[pos] == ';') {
         parts = parts.substr(pos + 1, -1);
         pos = _parse_param(parts);
         p = parts.substr(0, pos);
@@ -151,8 +151,8 @@ static Str _parse_header(const Str& line, StrStrMap *pdict)
             name = p.substr(0, i).strip().lower();
             value = p.substr(i + 1, -1).strip();
 
-            if (value.len_ >= 2 && value[0] == '"' && value[-1] == '"') {
-                value = value.substr(1, value.len_ - 1);
+            if (value.len() >= 2 && value[0] == '"' && value[-1] == '"') {
+                value = value.substr(1, value.len() - 1);
                 value = value.replace("\\\\", "\\").replace("\\\"", "\"");
             }
             pdict->insert({ name, value });
@@ -202,7 +202,7 @@ void parse_multipart_form_data(const Str& boundary, const Str& data,
     // in the wild.
     //
     if (boundary[0] == '"' && boundary[-1] == '"') {
-        bound = boundary.substr(1, boundary.len_ - 1);
+        bound = boundary.substr(1, boundary.len() - 1);
     }
     else {
         bound = boundary;
@@ -244,7 +244,7 @@ void parse_multipart_form_data(const Str& boundary, const Str& data,
         }
 
         Str name = it->second;
-        Str value = part.substr(eoh + 4, part.len_ - 2);    // exclude \r\n
+        Str value = part.substr(eoh + 4, part.len() - 2);    // exclude \r\n
 
         it  = disp_params.find("filename");
         if (it == disp_params.end()) {

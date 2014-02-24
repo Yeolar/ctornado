@@ -218,6 +218,16 @@ inline char Str::operator[](int i) const
     return *(data_ + i % len_);
 }
 
+inline size_t Str::len() const
+{
+    return len_;
+}
+
+inline const char *Str::data() const
+{
+    return data_;
+}
+
 inline string Str::tos() const
 {
     return string(data_, len_);

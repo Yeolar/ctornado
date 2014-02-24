@@ -255,8 +255,8 @@ char *vslprintf(char *buf, char *end, const char *fmt, va_list args)
             switch (*fmt) {
             case 'S':
                 s = va_arg(args, Str *);
-                len = min(static_cast<size_t>(end - buf), s->len_);
-                memcpy(buf, s->data_, len);
+                len = min(static_cast<size_t>(end - buf), s->len());
+                memcpy(buf, s->data(), len);
                 buf += len;
                 fmt++;
                 continue;
@@ -509,7 +509,7 @@ size_t vslprintf_len(const char *fmt, va_list args)
             switch (*fmt) {
             case 'S':
                 s = va_arg(args, Str *);
-                n += s->len_;
+                n += s->len();
                 fmt++;
                 continue;
             case 's':
