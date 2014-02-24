@@ -346,6 +346,14 @@ inline bool Str::ends_with(const Str& suffix) const
     return memcmp(data_ + len_ - suffix.len_, suffix.data_, suffix.len_) == 0;
 }
 
+inline void Str::remove_prefix(size_t n)
+{
+    ASSERT(n <= len_);
+
+    data_ += n;
+    len_ -= n;
+}
+
 inline Str Str::substr(int start, int end) const
 {
     ASSERT(data_ != nullptr);

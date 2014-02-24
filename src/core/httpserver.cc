@@ -184,6 +184,7 @@ void HTTPConnection::on_headers(const Str& data)
         close();
         return;
     }
+
     headers = HTTPHeaders::parse(data.substr(eol, -1));
 
     // HTTPRequest wants an IP, not a full socket address

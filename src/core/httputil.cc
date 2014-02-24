@@ -142,7 +142,7 @@ static Str _parse_header(const Str& line, StrStrMap *pdict)
     parts = line;
 
     while (pos < parts.len() && parts[pos] == ';') {
-        parts = parts.substr(pos + 1, -1);
+        parts.remove_prefix(pos + 1);
         pos = _parse_param(parts);
         p = parts.substr(0, pos);
 

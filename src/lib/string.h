@@ -118,6 +118,7 @@ public:
     bool starts_with(const Str& prefix) const;
     bool ends_with(const Str& suffix) const;
 
+    void remove_prefix(size_t n);
     Str substr(int start, int end) const;
 
     Str lstrip(const char *chars=nullptr) const;

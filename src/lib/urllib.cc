@@ -35,12 +35,12 @@ URL URL::split(const Str& url, bool allow_fragments)
 
         if (url1.eq("http")) {
             scheme = url1.lower();
-            url0 = url0.substr(i + 1, -1);
+            url0.remove_prefix(i + 1);
 
             if (url0.len() >= 2 && url0.substr(0, 2).eq("//")) {
                 j = split_netloc(url0, 2);
                 netloc = url0.substr(2, j);
-                url0 = url0.substr(j, -1);
+                url0.remove_prefix(j);
             }
             if (allow_fragments) {
                 j = url0.find('#');
@@ -67,7 +67,7 @@ URL URL::split(const Str& url, bool allow_fragments)
     if (url0.len() >= 2 && url0.substr(0, 2).eq("//")) {
         j = split_netloc(url0, 2);
         netloc = url0.substr(2, j);
-        url0 = url0.substr(j, -1);
+        url0.remove_prefix(j);
     }
     if (allow_fragments) {
         j = url0.find('#');

@@ -168,7 +168,7 @@ static Str _unquote(const Str& str)
     if (str[0] != '"' || str[-1] != '"')
         return str;
 
-    sub = str.substr(1, str.len() - 1);      // remove the "s
+    sub = str.substr(1, str.len() - 1);
     pos = sub.begin();
     end = sub.end();
 
@@ -322,15 +322,14 @@ void Cookie::load(const Str& data)
 {
     CookieMorsel *cm = nullptr;
     RegexMatch *m = nullptr;
-    Str key, value;
-    size_t pos = 0;
+    Str key, value, tmp = data;
 
-    while (pos < data.len()) {
+    while (!tmp.empty()) {
         if (m != nullptr)
             delete m;
 
         try {
-            m = _cookie_pattern->exec(data.substr(pos, -1));
+            m = _cookie_pattern->exec(tmp);
         }
         catch (Error& e) {
             log_vverb("Cookie regex exec error: %s", e.what());
@@ -341,7 +340,8 @@ void Cookie::load(const Str& data)
 
         key = m->substr(1);
         value = m->substr(2);
-        pos += m->get(0).end;
+
+        tmp.remove_prefix(m->get(0).end);
 
         // Parse the key and value in case it's metainfo
         if (key[0] == '$') {
@@ -349,8 +349,9 @@ void Cookie::load(const Str& data)
             // Ignore attributes which pertain to the cookie mechanism
             // as a whole. See RFC 2109.
             //
+            key.remove_prefix(1);
             if (cm)
-                cm->set_attribute(key.substr(1, -1), value);
+                cm->set_attribute(key, value);
         }
         else if (_reserved.find(key.lower()) != _reserved.end()) {
             if (cm)
