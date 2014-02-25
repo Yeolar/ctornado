@@ -35,6 +35,28 @@ Str hexlify(const Str& str)
     return Str(buffer, n);
 }
 
+Str unhexlify(const Str& str)
+{
+    str_buffer_t *buffer;
+    size_t n;
+
+    if (str.len() % 2 != 0) {
+        log_vverb("hexlify an odd length string");
+        return nullstr;
+    }
+
+    n = str.len() / 2;
+    buffer = Str::alloc(n);
+
+    if (unhexlify(
+            reinterpret_cast<uint8_t *>(buffer->data), n,
+            reinterpret_cast<const uint8_t *>(str.data()), str.len()) == -1) {
+        log_vverb("failed to hexlify '%s'", str.tos().c_str());
+        return nullstr;
+    }
+    return Str(buffer, n);
+}
+
 Str base64_encode(const Str& str)
 {
     str_buffer_t *buffer;

@@ -24,8 +24,13 @@ int main()
 
     Logger::initialize(Logger::INFO);
 
-    log_stderr("Hexlify '%s':\n", s);
-    log_stderr("  '%s'", hexlify(s).tos().c_str());
+    log_stderr("Original:\n  '%s'", s);
+
+    Str hex_str = hexlify(s);
+    log_stderr("hexlify:\n  '%s'", hex_str.tos().c_str());
+
+    Str unhex_str = unhexlify(hex_str);
+    log_stderr("unhexlify:\n  '%s'", unhex_str.tos().c_str());
 
     return 0;
 }

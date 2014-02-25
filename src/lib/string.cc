@@ -18,6 +18,9 @@
 
 namespace ctornado {
 
+static char _hex[] = "0123456789abcdef";
+static char _HEX[] = "0123456789ABCDEF";
+
 //
 // set uint value in little-endian
 //
@@ -26,11 +29,13 @@ void *memsetu(void *ptr, uint64_t value, size_t n)
     uint8_t *p;
     size_t i;
 
+    ASSERT(n > 0 && n <= 8);
+
     p = reinterpret_cast<uint8_t *>(ptr);
     i = 0;
 
     do {
-        *p++ = value & (0xff << (i++ * 8));
+        *p++ = (value >> (i++ * 8)) & 0xff;
     } while (i < n);
 
     return ptr;
@@ -400,8 +405,6 @@ static char *_sprintf_num(char *buf, char *end, uint64_t ui64, char zero,
     char *p, temp[UINT64_MAXLEN];
     size_t len;
     uint32_t ui32;
-    static char hex[] = "0123456789abcdef";
-    static char HEX[] = "0123456789ABCDEF";
 
     p = temp + UINT64_MAXLEN - 1;
 
@@ -425,12 +428,12 @@ static char *_sprintf_num(char *buf, char *end, uint64_t ui64, char zero,
     }
     else if (hexadecimal == 1) {
         do {
-            *--p = hex[ui64 & 0xf];
+            *--p = _hex[ui64 & 0xf];
         } while (ui64 >>= 4);
     }
     else { // hexadecimal == 2
         do {
-            *--p = HEX[ui64 & 0xf];
+            *--p = _HEX[ui64 & 0xf];
         } while (ui64 >>= 4);
     }
 
@@ -658,9 +661,8 @@ Str::Str(int i, int base)
     char tmp[12];       // max: 37777777777
     char *tp, *pos;
     bool negative;
-    int j;
 
-    ASSERT(base >= 8 && base <= 36);
+    ASSERT(base >= 8 && base <= 16);
 
     tp = tmp;
     negative = false;
@@ -670,8 +672,7 @@ Str::Str(int i, int base)
         negative = true;
     }
     do {
-        j = i % base;
-        *tp++ = j > 9 ? j - 10 + 'a' : j + '0';
+        *tp++ = _hex[i % base];
         i /= base;
 
     } while (i > 0);
@@ -1025,7 +1026,7 @@ Str Str::escape() const
 {
     str_buffer_t *buffer;
     const char *pos, *end;
-    char *ptr, c;
+    char *ptr;
     size_t n;
 
     ASSERT(data_ != nullptr);
@@ -1076,10 +1077,8 @@ Str Str::escape() const
         else {
             *ptr++ = '\\';
             *ptr++ = 'x';
-            c = (*pos >> 4) & 0xf;
-            *ptr++ = c > 0x9 ? c - 0xa + 'a' : c + '0';
-            c = *pos & 0xf;
-            *ptr++ = c > 0x9 ? c - 0xa + 'a' : c + '0';
+            *ptr++ = _hex[(*pos >> 4) & 0xf];
+            *ptr++ = _hex[ *pos       & 0xf];
         }
         pos++;
     }

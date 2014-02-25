@@ -25,7 +25,11 @@ namespace ctornado {
 extern "C" {
 #endif
 
-ssize_t hexlify(uint8_t *out, size_t out_len, const uint8_t *in, size_t in_len);
+ssize_t hexlify(uint8_t *out, size_t out_len,
+        const uint8_t *in, size_t in_len);
+
+ssize_t unhexlify(uint8_t *out, size_t out_len,
+        const uint8_t *in, size_t in_len);
 
 size_t base64_encode_len(size_t len);
 ssize_t base64_encode(uint8_t *out, size_t out_len,
@@ -47,6 +51,14 @@ ssize_t base64_decode(uint8_t *out, size_t out_len,
 // as long as the length of data.
 //
 Str hexlify(const Str& str);
+
+//
+// Return the binary data represented by the hexadecimal string str.
+//
+// str must contain an even number of hexadecimal digits
+// (which can be upper or lower case).
+//
+Str unhexlify(const Str& str);
 
 //
 // Encode string str using the standard Base64 alphabet.
