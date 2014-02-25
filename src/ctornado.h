@@ -30,6 +30,7 @@
 #include "lib/datetime.h"
 #include "lib/socket.h"
 #include "lib/epoll.h"
+#include "lib/binascii.h"
 #include "lib/pregex.h"
 #include "lib/urllib.h"
 #include "lib/httplib.h"
