@@ -29,7 +29,7 @@ Str hexlify(const Str& str)
     if (hexlify(
             reinterpret_cast<uint8_t *>(buffer->data), n,
             reinterpret_cast<const uint8_t *>(str.data()), str.len()) == -1) {
-        log_vverb("failed to hexlify '%s'", str.tos().c_str());
+        log_error("failed to hexlify '%s'", str.tos().c_str());
         return nullstr;
     }
     return Str(buffer, n);
@@ -41,7 +41,7 @@ Str unhexlify(const Str& str)
     size_t n;
 
     if (str.len() % 2 != 0) {
-        log_vverb("hexlify an odd length string");
+        log_error("hexlify an odd length string");
         return nullstr;
     }
 
@@ -51,7 +51,7 @@ Str unhexlify(const Str& str)
     if (unhexlify(
             reinterpret_cast<uint8_t *>(buffer->data), n,
             reinterpret_cast<const uint8_t *>(str.data()), str.len()) == -1) {
-        log_vverb("failed to hexlify '%s'", str.tos().c_str());
+        log_error("failed to hexlify '%s'", str.tos().c_str());
         return nullstr;
     }
     return Str(buffer, n);
@@ -68,7 +68,7 @@ Str base64_encode(const Str& str)
     if (base64_encode(
             reinterpret_cast<uint8_t *>(buffer->data), n,
             reinterpret_cast<const uint8_t *>(str.data()), str.len()) == -1) {
-        log_vverb("failed to base64 encode '%s'", str.tos().c_str());
+        log_error("failed to base64 encode '%s'", str.tos().c_str());
         return nullstr;
     }
     return Str(buffer, n);
@@ -86,7 +86,7 @@ Str base64_decode(const Str& str)
     if (base64_decode(
             reinterpret_cast<uint8_t *>(buffer->data), n,
             reinterpret_cast<const uint8_t *>(str.data()), str.len()) == -1) {
-        log_vverb("failed to base64 decode '%s'", str.tos().c_str());
+        log_error("failed to base64 decode '%s'", str.tos().c_str());
         return nullstr;
     }
     return Str(buffer, n);

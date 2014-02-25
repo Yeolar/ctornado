@@ -18,9 +18,6 @@
 
 using namespace ctornado;
 
-#define MAX_DATA_SIZE    1024
-#define MAX_ENCODED_SIZE 2048
-
 void test_encode_decode(const char *data, const char *encoded_ref)
 {
     log_stderr("");
@@ -61,35 +58,14 @@ int main()
         { "666666",  "NjY2NjY2"     },
         { "abc:def", "YWJjOmRlZg==" },
     };
-    //char in[1024], out[2048];
+
+    Logger::initialize(Logger::INFO);
 
     log_stderr("Base64 encoding/decoding tests:");
 
     for (size_t i = 0; i < NELEMS(tests); i++) {
         test_encode_decode(tests[i].data, tests[i].encoded_ref);
     }
-
-    /*
-    if (argc>1 && !strcmp(argv[1], "-t")) {
-        memset(in, 123, sizeof(in));
-        for(i=0; i<10000; i++){
-            START_TIMER
-            av_base64_encode(out, sizeof(out), in, sizeof(in));
-            STOP_TIMER("encode")
-        }
-        for(i=0; i<10000; i++){
-            START_TIMER
-            av_base64_decode(in, out, sizeof(in));
-            STOP_TIMER("decode")
-        }
-
-        for(i=0; i<10000; i++){
-            START_TIMER
-            av_base64_decode(NULL, out, 0);
-            STOP_TIMER("syntax check")
-        }
-    }
-    */
 
     return 0;
 }
