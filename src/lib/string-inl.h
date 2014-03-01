@@ -173,6 +173,13 @@ inline Str& Str::operator=(const char *str)
 inline Str& Str::operator=(const Str& str)
 {
     if (this != &str) {
+        if (buffer_ != nullptr) {
+            buffer_->cnt--;
+
+            if (buffer_->cnt == 0)
+                FREE(buffer_);
+        }
+
         len_ = str.len_;
         data_ = str.data_;
         buffer_ = str.buffer_;
@@ -187,12 +194,12 @@ inline Str& Str::operator=(const Str& str)
 inline Str& Str::operator=(Str&& str)
 {
     if (this != &str) {
-        //
-        // With the same buffer, e.g.:
-        //  s = s.substr(1, -1)
-        //
-        if (buffer_ != nullptr && buffer_ == str.buffer_)
-            str.buffer_->cnt--;
+        if (buffer_ != nullptr) {
+            buffer_->cnt--;
+
+            if (buffer_->cnt == 0)
+                FREE(buffer_);
+        }
 
         len_ = str.len_;
         data_ = str.data_;

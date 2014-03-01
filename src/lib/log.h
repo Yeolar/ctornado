@@ -39,11 +39,16 @@ public:
     ~Logger();
 
     static int initialize(int level, char *filename=nullptr);
+
     static void set_level(int level);
+
     static bool loggable(int level);
+
     static void _log(int level, const char *file, int line, int panic,
             const char *fmt, ...);
+
     static void _log_stderr(const char *fmt, ...);
+
     static void _log_hexdump(const char *file, int line,
             char *data, int datalen, const char *fmt, ...);
 

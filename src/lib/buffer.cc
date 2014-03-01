@@ -18,6 +18,13 @@
 
 namespace ctornado {
 
+void Buffer::merge(Buffer *buffer)
+{
+    while (buffer->size() > 0) {
+        push(buffer->pop());
+    }
+}
+
 void Buffer::merge_prefix(size_t size)
 {
     Str chunk;
@@ -146,6 +153,22 @@ void Buffer::clear()
 {
     chunk_dq_.clear();
     size_ = 0;
+}
+
+Buffer *BufferIO::get_buffer()
+{
+    return &buffer_;
+}
+
+Str BufferIO::get_value()
+{
+    buffer_.merge_prefix(buffer_.size());
+    return buffer_.top();
+}
+
+void BufferIO::clear()
+{
+    buffer_.clear();
 }
 
 } // namespace

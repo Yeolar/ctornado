@@ -24,7 +24,7 @@ static uint8_t _hex[] = "0123456789abcdef";
 //
 // Convert '0' ~ '9', 'A' ~ 'F', 'a' ~ 'f' to 0x0 ~ 0xf.
 //
-uint8_t _xctoi(uint8_t c)
+static uint8_t _xctoi(uint8_t c)
 {
     uint8_t i;
 

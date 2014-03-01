@@ -27,6 +27,8 @@ public:
     Buffer() : size_(0) {}
     ~Buffer() {}
 
+    void merge(Buffer *buffer);
+
     void merge_prefix(size_t size);
     void double_prefix();
     void remove_prefix(size_t size);
@@ -40,6 +42,20 @@ public:
 private:
     deque<Str> chunk_dq_;
     size_t size_;
+};
+
+class BufferIO
+{
+public:
+    BufferIO() {}
+    virtual ~BufferIO() {}
+
+    Buffer *get_buffer();
+    Str get_value();
+    void clear();
+
+protected:
+    Buffer buffer_;
 };
 
 } // namespace

@@ -41,7 +41,7 @@ int scnprintf(char *buf, size_t size, const char *fmt, ...);
 int vscnprintf(char *buf, size_t size, const char *fmt, va_list args);
 
 //
-// Like vsprintf, support Str type
+// Like vsprintf, support Str type and other self-defined types
 //
 char *slprintf(char *buf, char *end, const char *fmt, ...);
 char *vslprintf(char *buf, char *end, const char *fmt, va_list args);
@@ -52,7 +52,9 @@ typedef struct {
     char data[1];
 } str_buffer_t;
 
-#define STR_BUF_4K      (4096 - sizeof(uint16_t))
+#define STR_BUF_1K      ( 1024 - sizeof(uint16_t))
+#define STR_BUF_4K      ( 4096 - sizeof(uint16_t))
+#define STR_BUF_16K     (16384 - sizeof(uint16_t))
 
 //
 // There are three types of Str:
