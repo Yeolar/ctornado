@@ -173,7 +173,7 @@ GZipCompressor::GZipCompressor(int compress_level)
 
     err_ = gz_compress_init(&stream_, compress_level);
     if (err_ != Z_OK)
-        throw IOError(err_, zError(err_));
+        throw GZipError(err_, zError(err_));
 
     write_gzip_header();
 }
@@ -236,7 +236,7 @@ void GZipCompressor::compress(const Str& data)
         } while (stream_.avail_out == 0);
 
         if (err_ != Z_OK && err_ != Z_BUF_ERROR)
-            throw IOError(err_, zError(err_));
+            throw GZipError(err_, zError(err_));
     }
 }
 
@@ -271,7 +271,7 @@ void GZipCompressor::flush(int flush_mode)
     }
 
     if (err_ != Z_OK && err_ != Z_STREAM_END && err_ != Z_BUF_ERROR)
-        throw IOError(err_, zError(err_));
+        throw GZipError(err_, zError(err_));
 }
 
 void GZipCompressor::close()
@@ -291,7 +291,7 @@ GZipDecompressor::GZipDecompressor()
 {
     err_ = gz_decompress_init(&stream_);
     if (err_ != Z_OK)
-        throw IOError(err_, zError(err_));
+        throw GZipError(err_, zError(err_));
 }
 
 void GZipDecompressor::decompress(const Str& data)
@@ -320,7 +320,7 @@ void GZipDecompressor::decompress(const Str& data)
         } while (stream_.avail_out == 0);
 
         if (err_ != Z_OK && err_ != Z_STREAM_END && err_ != Z_BUF_ERROR)
-            throw IOError(err_, zError(err_));
+            throw GZipError(err_, zError(err_));
     }
 }
 
@@ -344,7 +344,7 @@ void GZipDecompressor::flush()
     } while (stream_.avail_out == 0);
 
     if (err_ != Z_OK && err_ != Z_STREAM_END && err_ != Z_BUF_ERROR)
-        throw IOError(err_, zError(err_));
+        throw GZipError(err_, zError(err_));
 }
 
 void GZipDecompressor::close() {}

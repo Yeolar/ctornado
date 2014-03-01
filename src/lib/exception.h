@@ -21,6 +21,9 @@
 
 namespace ctornado {
 
+//
+// Base Error class inherits from std::exception
+//
 class Error : public std::exception
 {
 public:
@@ -45,7 +48,9 @@ protected:
     char *msg_;
 };
 
-
+//
+// Error with variant message parameters
+//
 class VError : public Error
 {
 public:
@@ -59,14 +64,18 @@ protected:
     virtual void format_message(const char *fmt, va_list varg);
 };
 
-
+//
+// Error for not implemented methods, ...
+//
 class NotImplError : public Error
 {
 public:
     NotImplError() : Error("Not implemented") {}
 };
 
-
+//
+// Error for IO errors
+//
 class IOError : public Error
 {
 public:
@@ -75,7 +84,9 @@ public:
     IOError(const char *msg) : Error(msg) {}
 };
 
-
+//
+// Error for socket errors, inherits from IOError
+//
 class SocketError : public IOError
 {
 public:
@@ -83,7 +94,9 @@ public:
     SocketError(const char *msg) : IOError(msg) {}
 };
 
-
+//
+// Error for getaddrinfo errors, inherits from IOError
+//
 class SocketGaiError : public IOError
 {
 public:
@@ -95,21 +108,36 @@ public:
     }
 };
 
+//
+// Error for GZip errors
+//
+class GZipError : public Error
+{
+public:
+    GZipError(int err, const char *msg) : Error(err, msg) {}
+};
 
+//
+// Error for any value errors
+//
 class ValueError : public VError
 {
 public:
     ValueError(const char *msg, ...);
 };
 
-
+//
+// Error for Regex errors
+//
 class RegexError : public VError
 {
 public:
     RegexError(const char *msg, ...);
 };
 
-
+//
+// Error for HTTP errors
+//
 class HTTPError : public VError
 {
 public:
