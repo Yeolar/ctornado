@@ -57,6 +57,17 @@ bool HTTPHeaders::has(const Str& name)
     return map_.find(normalize_name(name)) != map_.end();
 }
 
+void HTTPHeaders::set(const Str& name, const Str& value)
+{
+    Str norm_name;
+
+    norm_name = normalize_name(name);
+
+    map_[norm_name] = value;
+    log_verb("headers set (%s, %s)",
+            norm_name.tos().c_str(), map_[norm_name].tos().c_str());
+}
+
 void HTTPHeaders::add(const Str& name, const Str& value)
 {
     Str norm_name;

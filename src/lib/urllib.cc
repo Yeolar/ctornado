@@ -109,6 +109,38 @@ Str URL::unsplit()
     return url;
 }
 
+Str URL::username()
+{
+    if (host_.null()) {
+        get_uphp();
+    }
+    return username_;
+}
+
+Str URL::password()
+{
+    if (host_.null()) {
+        get_uphp();
+    }
+    return password_;
+}
+
+Str URL::host()
+{
+    if (host_.null()) {
+        get_uphp();
+    }
+    return host_;
+}
+
+int URL::port()
+{
+    if (host_.null()) {
+        get_uphp();
+    }
+    return port_;
+}
+
 int URL::split_netloc(const Str& url, int start)
 {
     static const char *delimiters = "/?#";
@@ -166,6 +198,44 @@ bool URL::is_uses_netloc(const Str& str)
             return true;
     }
     return false;
+}
+
+void URL::get_uphp()
+{
+    int i, j, k;
+    Str host;
+    int port = -1;
+
+    i = netloc_.rfind('@');
+    if (i != -1) {
+        j = netloc_.find(':', 0, i);
+        if (j != -1) {
+            username_ = netloc_.substr(0, j);
+            password_ = netloc_.substr(j + 1, i);
+        }
+        else {
+            username_ = netloc_.substr(0, i);
+        }
+    }
+
+    k = netloc_.find(':', i + 1, -1);
+    if (k != -1) {
+        host = netloc_.substr(i + 1, k);
+        port = netloc_.substr(k + 1, -1).toi();
+    }
+    else {
+        host = netloc_.substr(i + 1, -1);
+    }
+
+    if (host.len() >= 2 && host[0] == '[' && host[-1] == ']')
+        host_ = host.substr(1, host.len() - 1);
+    else
+        host_ = host;
+
+    if (valid_port(port))
+        port_ = port;
+    else
+        port_ = -1;
 }
 
 Query *Query::parse(const Str& str)

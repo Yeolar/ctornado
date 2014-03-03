@@ -33,11 +33,16 @@ public:
         , fragment_(fragment) {}
     ~URL() {}
 
+    static bool is_uses_relative(const Str& str);
+    static bool is_uses_netloc(const Str& str);
+
     static URL split(const Str& url, bool allow_fragments=true);
     Str unsplit();
 
-    static bool is_uses_relative(const Str& str);
-    static bool is_uses_netloc(const Str& str);
+    Str username();
+    Str password();
+    Str host();
+    int port();
 
     Str scheme_;
     Str netloc_;
@@ -46,8 +51,15 @@ public:
     Str fragment_;
 
 private:
+    Str username_;
+    Str password_;
+    Str host_;
+    int port_;
+
     static int split_netloc(const Str& url, int start=0);
     static bool is_scheme_chars(const Str& str);
+
+    void get_uphp();
 };
 
 class Query

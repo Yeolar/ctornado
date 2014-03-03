@@ -32,6 +32,7 @@ class HTTPHeaders
 {
 public:
     HTTPHeaders() {}
+    HTTPHeaders(const HTTPHeaders& headers) : map_(headers.map_) {}
     ~HTTPHeaders() {}
 
     //
@@ -43,6 +44,11 @@ public:
     // Returns ture if has the given key.
     //
     bool has(const Str& name);
+
+    //
+    // Sets the value of the given key.
+    //
+    void set(const Str& name, const Str& value);
 
     //
     // Adds a new value for the given key.
