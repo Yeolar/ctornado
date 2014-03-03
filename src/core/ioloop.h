@@ -39,8 +39,8 @@ public:
 
 struct TimeoutLess
 {
-    bool operator()(const Timeout& t1, const Timeout& t2) const
-    { return t1 < t2; }
+    bool operator()(Timeout *t1, Timeout *t2) const
+    { return *t1 < *t2; }
 };
 
 //
@@ -175,7 +175,7 @@ private:
     map<int, uint32_t> events_;
     list<cb_t> callbacks_;
     pthread_mutex_t callback_lock_;
-    priority_queue<Timeout, vector<Timeout>, TimeoutLess> timeouts_;
+    priority_queue<Timeout *, vector<Timeout *>, TimeoutLess> timeouts_;
     bool running_;
     bool stopped_;
 

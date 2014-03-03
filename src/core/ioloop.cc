@@ -133,17 +133,18 @@ void IOLoop::start()
             now = msec_now();
 
             while (!timeouts_.empty()) {
-                Timeout timeout = timeouts_.top();
+                Timeout *timeout = timeouts_.top();
 
-                if (timeout.callback_ == nullptr) {
+                if (timeout->callback_ == nullptr) {
                     // the timeout was cancelled
                     timeouts_.pop();
+                    delete timeout;
                 }
-                else if (timeout.deadline_ <= now) {
-                    run_callback(timeout.callback_);
+                else if (timeout->deadline_ <= now) {
+                    run_callback(timeout->callback_);
                 }
                 else {
-                    msecs = timeout.deadline_ - now;
+                    msecs = timeout->deadline_ - now;
                     poll_timeout = min(msecs, poll_timeout);
                     break;
                 }
@@ -211,7 +212,7 @@ bool IOLoop::running()
 Timeout *IOLoop::add_timeout(int64_t deadline, cb_t callback)
 {
     Timeout *timeout = new Timeout(deadline, callback);
-    timeouts_.push(*timeout);
+    timeouts_.push(timeout);
     return timeout;
 }
 
