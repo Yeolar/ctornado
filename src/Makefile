@@ -21,9 +21,11 @@ else
 endif
 
 BA_CLIBS=hex.o base64.o
+HASH_CLIBS=md5.o sha1.o
 XLIBS=util.o log.o exception.o string.o buffer.o datetime.o \
-	  socket.o epoll.o binascii.o gzip.o pregex.o urllib.o httplib.o cookie.o
-LIBS=$(BA_CLIBS) $(XLIBS)
+	  socket.o epoll.o binascii.o hash.o gzip.o pregex.o \
+	  urllib.o httplib.o cookie.o
+LIBS=$(BA_CLIBS) $(HASH_CLIBS) $(XLIBS)
 CORES=ioloop.o iostream.o tcpserver.o httputil.o httpserver.o
 WEBS=
 OBJS=$(LIBS) $(CORES) $(WEBS)
@@ -45,6 +47,9 @@ clean_test:
 	rm -f *_test*
 
 $(BA_CLIBS): %.o: lib/binascii/%.c
+	$(CC) -c -o $@ $(CFLAGS) $<
+
+$(HASH_CLIBS): %.o: lib/hash/%.c
 	$(CC) -c -o $@ $(CFLAGS) $<
 
 $(XLIBS): %.o: lib/%.cc $(ALLOC_DEP)
