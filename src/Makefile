@@ -32,7 +32,7 @@ OBJS=$(LIBS) $(CORES) $(WEBS)
 
 TESTS=log_test exception_test string_test buffer_test datetime_test \
 	  socket_server_test socket_client_test epoll_test \
-	  hex_test base64_test \
+	  hex_test base64_test md5_test sha1_test \
 	  gzip_test pregex_test urllib_test cookie_test \
 	  ioloop_test iostream_test httputil_test httpserver_test
 
