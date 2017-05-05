@@ -1,6 +1,8 @@
 CTornado
 ========
 
+NOTE: Deprecated. Please check my new [rddoc-framework](https://github.com/Yeolar/rddoc-framework), which is used in production environment.
+
 A C++ fork of Facebook Tornado web framework.
 
 Required C++11.
